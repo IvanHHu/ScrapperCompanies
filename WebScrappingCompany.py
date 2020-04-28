@@ -657,7 +657,7 @@ class WebScrappingCompany:
                         params['pathSearch'] = str(item).replace(u' ',u'-') + '/'
                     resultLinks = ""
                     try:
-                        proxies = {'https': 'https://user-59460:user-59460@31.220.33.13:1212'}
+                        proxies = {'https': 'https://user-59460:user-59460@91.219.28.111:1212'}
                         proxy_pool = cycle(proxies)
                         proxy = next(proxy_pool)
                         if IsGOOGLE == False and NoEntrar == True:
@@ -882,7 +882,7 @@ class WebScrappingCompany:
                 #continue
     
     def getRequestPageDetailInfo(self, pageCompany, fullUrl, company, headersCsv,item):
-        proxies = {'https': 'https://user-59460:user-59460@31.220.33.13:1212'}
+        proxies = {'https': 'https://user-59460:user-59460@91.219.28.111:1212'}
         proxy_pool = cycle(proxies)
         proxy = next(proxy_pool)
         pageDetail = requests.get(pageCompany,proxies=proxies)
