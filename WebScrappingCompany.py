@@ -61,9 +61,9 @@ class WebScrappingCompany:
             csvF.setPathFile(sys.argv[1:][0])
             sourceList = csvF.readFile(False)
             if sourceList != []:
-                sourceList.pop(0)
+                #sourceList.pop(0)
                 listOfHeadersInput = sourceList[0]
-                sourceList.pop(0)
+                #sourceList.pop(0)
                 for sourceItems in sourceList:
                     if sourceItems != []:
                         company = self.newCompany(dict(zip(listOfHeadersInput, sourceItems)))
@@ -569,33 +569,35 @@ class WebScrappingCompany:
         import re
         print('570 String Original: ', texto)
         stringLimpio = ''
-        if typeString == StringType.AlfaNumerico:
-            listaStrings = re.compile(r'\W+', re.UNICODE).split(texto)
-            for string in listaStrings:
-                if string != '':
-                    stringLimpio += string + ' '
-        elif typeString == StringType.AlfaNumericoExt:
-            #listaStrings = re.compile(r'^[\W]+', re.UNICODE).split(texto)
-            listaStrings = re.compile(r'^[\W]+', re.UNICODE).split(texto)
-            for string in listaStrings:           
-                if string != '':
-                    stringLimpio += string + ' '
-        elif typeString == StringType.Email:
-            #listaStrings = re.compile(r'^(\d+)@(\d+)/(\d+)$', re.UNICODE).split(texto)
-            texto = texto.replace(' ','')
-            email = re.search(r'[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,6}',texto)
-            stringLimpio = email.group(0)
-        elif typeString == StringType.Telefono:
-            telefono = re.search(r'[\d\.]+',texto)
-            stringLimpio = telefono.group(0)
-        elif typeString == StringType.Web:
-            pagina = None
-            if 'http' in texto:
-                pagina = re.search(r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',texto)
-            else:
-                pagina = re.search(r'^(www?)\.([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',texto)
-            stringLimpio = pagina.group(0)
-        print('597 String Limpio: ', stringLimpio)
+        if texto != '':
+            if typeString == StringType.AlfaNumerico:
+                listaStrings = re.compile(r'\W+', re.UNICODE).split(texto)
+                for string in listaStrings:
+                    if string != '':
+                        stringLimpio += string + ' '
+            elif typeString == StringType.AlfaNumericoExt:
+                #listaStrings = re.compile(r'^[\W]+', re.UNICODE).split(texto)
+                listaStrings = re.compile(r'^[\W]+', re.UNICODE).split(texto)
+                for string in listaStrings:           
+                    if string != '':
+                        stringLimpio += string + ' '
+            elif typeString == StringType.Email:
+                #listaStrings = re.compile(r'^(\d+)@(\d+)/(\d+)$', re.UNICODE).split(texto)
+                if '@' in texto:
+                    texto = texto.replace(' ','')
+                    email = re.search(r'[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,6}',texto)
+                    stringLimpio = email.group(0)
+            elif typeString == StringType.Telefono:
+                telefono = re.search(r'[\d\.]+',texto)
+                stringLimpio = telefono.group(0)
+            elif typeString == StringType.Web:
+                pagina = None
+                if 'http' in texto:
+                    pagina = re.search(r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',texto)
+                else:
+                    pagina = re.search(r'^(www?)\.([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',texto)
+                stringLimpio = pagina.group(0)
+            print('597 String Limpio: ', stringLimpio)
         return stringLimpio
 
     def fixHeaders(self, headers = []):
@@ -657,7 +659,7 @@ class WebScrappingCompany:
                         params['pathSearch'] = str(item).replace(u' ',u'-') + '/'
                     resultLinks = ""
                     try:
-                        proxies = {'https': 'https://user-59460:user-59460@91.219.28.111:1212'}
+                        proxies = {'https': 'https://user-59460:user-59460@77.74.194.138:1212'}
                         proxy_pool = cycle(proxies)
                         proxy = next(proxy_pool)
                         if IsGOOGLE == False and NoEntrar == True:
@@ -796,7 +798,7 @@ class WebScrappingCompany:
                             if company[headersCsv[2]]['valor'] == '' or company[headersCsv[2]]['fuente'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Website","Link", url, item)
-                                company[headersCsv[2]]['valor'] = self.cleanStringData(outputs,StringType.Web) if company[headersCsv[2]]['valor'] == '' else self.cleanStringData(outputs,StringType.Web)
+                                company[headersCsv[2]]['valor'] = outputs if company[headersCsv[2]]['valor'] == '' else outputs
                                 company[headersCsv[2]]['fuente'] = url_2
                             if company[headersCsv[0]]['valor'] == '' or company[headersCsv[0]]['fuente'] == '':
                                 self.FoundData == True
@@ -882,7 +884,7 @@ class WebScrappingCompany:
                 #continue
     
     def getRequestPageDetailInfo(self, pageCompany, fullUrl, company, headersCsv,item):
-        proxies = {'https': 'https://user-59460:user-59460@91.219.28.111:1212'}
+        proxies = {'https': 'https://user-59460:user-59460@77.74.194.138:1212'}
         proxy_pool = cycle(proxies)
         proxy = next(proxy_pool)
         pageDetail = requests.get(pageCompany,proxies=proxies)
@@ -924,7 +926,7 @@ class WebScrappingCompany:
                         else:
                             first_letter = "B"
                         #if str(datos[i])[0] == first_letter:
-                        if str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0] == first_letter:
+                        if str(datos[i]) != '' and str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0] == first_letter:
                             self.FoundData == True
                             company[headersCsv[3]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumerico) if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(company[headersCsv[3]]['valor'],StringType.AlfaNumerico)
                             company[headersCsv[3]]['fuente'] = pageCompany
