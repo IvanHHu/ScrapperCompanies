@@ -63,7 +63,7 @@ class WebScrappingCompany:
             if sourceList != []:
                 #sourceList.pop(0)
                 listOfHeadersInput = sourceList[0]
-                #sourceList.pop(0)
+                sourceList.pop(0)
                 for sourceItems in sourceList:
                     if sourceItems != []:
                         company = self.newCompany(dict(zip(listOfHeadersInput, sourceItems)))
@@ -71,9 +71,9 @@ class WebScrappingCompany:
                         company[listOfHeadersInput[1]]['valor']= sourceItems[1]
                         company[listOfHeadersInput[2]]['valor'] = sourceItems[2]
                         company[listOfHeadersInput[3]]['valor'] = sourceItems[3]
-                        #print(company[listOfHeadersInput[1]])
+                        print(company[listOfHeadersInput[1]])
                         sourceItems = [sourceItems[1], sourceItems[3],sourceItems[0],sourceItems[2]]
-                        #print(sourceItems)
+                        print(sourceItems)
                         for webSite in WebSite:
                             print('Buscando en ......  ' + str(webSite.name))
                             if self.FoundData == True:
@@ -367,7 +367,7 @@ class WebScrappingCompany:
                     xpath = '//div[@id="fe-informacion-izq"]/p[%d]/text()' % i
                     xpathLnk = '//div[@id="fe-informacion-izq"]/p[%d]/a/text()' % i
                     if i <= 5:
-                        if field.xpath(xpath) != [] and i < 4:
+                        if field.xpath(xpath) != [] and i < 5:
                             valor = self.cleanStringData(field.xpath(xpath)[0],StringType.AlfaNumerico)
                             print('358 ',self.cleanStringData(field.xpath(xpath)[0],StringType.AlfaNumerico))
                             tditem = valor
