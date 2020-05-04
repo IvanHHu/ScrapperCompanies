@@ -9,7 +9,6 @@ class OutputData:
         #self.fieldSource = fS
         self.field['name'] = fN
         self.field['source'] = fS
-
     def setFieldName(self, fieldName = ""):
         #self.fieldName = fieldName
         self.field['name'] = fieldName

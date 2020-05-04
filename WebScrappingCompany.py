@@ -189,6 +189,7 @@ class WebScrappingCompany:
         return matchRatioStr
 
     def getOutputDataFromHtml_Google(self, field, Selector, url, item):
+        import re
         dato = ''
         if Selector == "Link":
             print("Aqui va el link")
@@ -224,23 +225,43 @@ class WebScrappingCompany:
                 print(url_2)
                 soup = BeautifulSoup(page.content,"lxml")
                 html_text = str(soup.text).lower()[30:]
-                if str(field.lower()) == "localidad" or str(field.lower()) == "cif/nif" or str(field.lower()) == "telefono":
-                    limite = 15
-                else:
-                    limite = 40
-                len_dato = 100
-                while len_dato > limite:
-                    first_point = html_text.find(str(field.lower()))
-                    if first_point == -1:
-                        break
-                    first_data = html_text[int(first_point):]
-                    last_point = first_data.find(",")
-                    dato = str(first_data[0:int(last_point)])
-                    dato = str(dato.split("\n")[0])[int(str(dato.split("\n")[0]).find(":")):int(limite) + int(str(dato.split("\n")[0]).find(":"))]
-                    print("El dato es ... " + dato)
-                    dato = str(str(dato.replace(':',"")).strip()).title()
-                    html_text = first_data[1:]
-                    len_dato = len(dato)
+                field_l = field.lower()
+                dato=''
+                html_text.replace(' ','')
+                print(field_l)
+                print(html_text)
+                if field_l == "localidad:":
+                    dato = re.findall("localidad [ ,:;] .[a-zA-Z]{1,20}",html_text)
+                if field_l == "cif/nif:":
+                    dato = re.findall("[ab][0-9]{1,9}",html_text)
+                    dato= dato[0].replace(':','').replace(' ','')
+                if field_l == "email:":
+                    dato = re.findall("\w+@\w+\.\w+",html_text)
+                if field_l == "telefono:":
+                    dato = re.findall('[:,.] [0-9]{8,10}',html_text)
+                if field_l == "denominacion:":
+                    dato = re.findall('denominacion[:,.][a-zA-Z]{1,20}[:,.]',html_text)
+                if field_l == "cnae 2009:":
+                    dato = re.findall('cnae[ :,.][a-zA-Z]{1,20}[:,.]',html_text)
+                if field_l == "facturacion:":
+                    dato = re.findall('[0-9]{1,8} € - [0-9]{1,8}€',html_text)
+                print(dato)    
+       #             limite = 15
+       #         else:
+       #             limite = 40
+       #         len_dato = 100
+       #         while len_dato > limite:
+       #            first_point = html_text.find(str(field.lower()))
+       #            if first_point == -1:
+       #            break
+       #            first_data = html_text[int(first_point):]
+       #            last_point = first_data.find(",")
+       #            dato = str(first_data[0:int(last_point)])
+       #            dato = str(dato.split("\n")[0])[int(str(dato.split("\n")[0]).find(":")):int(limite) + int(str(dato.split("\n")[0]).find(":"))]
+       #            print("El dato es ... " + dato)
+       #            dato = str(str(dato.replace(':',"")).strip()).title()
+       #            html_text = first_data[1:]
+       #            len_dato = len(dato)
         return dato, url_2
 
     def get_proxies(self):
@@ -659,10 +680,10 @@ class WebScrappingCompany:
                         params['pathSearch'] = str(item).replace(u' ',u'-') + '/'
                     resultLinks = ""
                     try:
-                        proxies = {'https': 'https://user-59460:user-59460@77.74.194.138:1212'}
+                        proxies = {'https': 'https://user-59460:user-59460@91.219.28.111:1212'}
                         proxy_pool = cycle(proxies)
                         proxy = next(proxy_pool)
-                        if IsGOOGLE == False and NoEntrar == True:
+                        if IsGOOGLE == True and NoEntrar == True:
                             page = None
                             if fullUrl['type'] == 'd':
                                 page = requests.get(url, params=params, proxies=proxies, timeout=5)
@@ -795,7 +816,7 @@ class WebScrappingCompany:
                         elif IsGOOGLE == True and NoEntrar == False:
                             #item = item.replace(' SL ',' Sociedad Limitada').replace(' Sl ',' Sociedad Limitada').replace(' sl ',' Sociedad Limitada').replace(' sL ',' Sociedad Limitada')
                             #item = item.replace(' SA ','Sociedad Anonima').replace(' Sa ',' Sociedad Anonima').replace(' sa ',' Sociedad Anonima').replace(' sA ',' Sociedad Anonima')
-                            if company[headersCsv[2]]['valor'] == '' or company[headersCsv[2]]['fuente'] == '':
+                            if company[headersCsv[2]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Website","Link", url, item)
                                 company[headersCsv[2]]['valor'] = outputs if company[headersCsv[2]]['valor'] == '' else outputs
@@ -803,59 +824,62 @@ class WebScrappingCompany:
                             if company[headersCsv[0]]['valor'] == '' and company[headersCsv[0]]['fuente'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Empresa:","Info", url, item)
-                                company[headersCsv[0]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[0]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
+                                #company[headersCsv[0]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[0]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
+                                company[headersCsv[0]]['valor'] = outputs if company[headersCsv[0]]['valor'] == '' else outputs
                                 company[headersCsv[0]]['fuente'] = url_2
                             if company[headersCsv[1]]['valor'] == '' and company[headersCsv[1]]['fuente'] == '':
                                 self.FoundData == True
-                                outputs, url_2 = self.getOutputDataFromHtml_Google("Denominacion","Info", url, item)
+                                #outputs, url_2 = self.getOutputDataFromHtml_Google("Denominacion:","Info", url, item)
+                                company[headersCsv[0]]['valor'] = outputs if company[headersCsv[1]]['valor'] == '' else outputs
                                 company[headersCsv[1]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[1]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[1]]['fuente'] = url_2
                             if company[headersCsv[3]]['valor'] == '' and company[headersCsv[3]]['fuente'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("CIF/NIF:","Info", url, item)
-                                company[headersCsv[3]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumerico) if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumerico)
+                                #company[headersCsv[3]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumerico) if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumerico)
+                                company[headersCsv[3]]['valor'] = outputs if company[headersCsv[3]]['valor'] == '' else outputs
                                 company[headersCsv[3]]['fuente'] = url_2
-                            if company[headersCsv[4]]['valor'] == '' and company[headersCsv[4]]['fuente'] == '':
+                            if company[headersCsv[4]]['valor'] == '':
                                 self.FoundData == True
-                                outputs, url_2 = self.getOutputDataFromHtml_Google("Telefono","Info", url, item)
+                                outputs, url_2 = self.getOutputDataFromHtml_Google("Telefono:","Info", url, item)
                                 company[headersCsv[4]]['valor'] = self.cleanStringData(outputs,StringType.Telefono) if company[headersCsv[4]]['valor'] == '' else self.cleanStringData(outputs,StringType.Telefono)
                                 company[headersCsv[4]]['fuente'] = url_2
-                            if company[headersCsv[5]]['valor'] == '' or company[headersCsv[5]]['fuente'] == '':
+                            if company[headersCsv[5]]['valor'] == '':
                                 self.FoundData == True
-                                outputs, url_2 = self.getOutputDataFromHtml_Google("Email","Info", url, item)
+                                outputs, url_2 = self.getOutputDataFromHtml_Google("Email:","Info", url, item)
                                 company[headersCsv[5]]['valor'] = self.cleanStringData(outputs,StringType.Email) if company[headersCsv[5]]['valor'] == '' else self.cleanStringData(outputs,StringType.Email)
                                 company[headersCsv[5]]['fuente'] = url_2
-                            if company[headersCsv[6]]['valor'] == '' or company[headersCsv[6]]['fuente'] == '':
+                            if company[headersCsv[6]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("CNAE 2009:","Info", url, item)
                                 company[headersCsv[6]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[6]]['fuente'] = url_2
-                            if company[headersCsv[7]]['valor'] == '' or company[headersCsv[7]]['fuente'] == '':
+                            if company[headersCsv[7]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Contacts","Info", url, item)
                                 company[headersCsv[7]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumerico) if company[headersCsv[7]]['valor'] == '' else self.cleanStringData(outputs, StringType.AlfaNumerico)
                                 company[headersCsv[7]]['fuente'] = url_2
-                            if company[headersCsv[8]]['valor'] == '' or company[headersCsv[8]]['fuente'] == '':
+                            if company[headersCsv[8]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Contacts Title","Info", url, item)
                                 company[headersCsv[8]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[8]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[8]]['fuente'] = url_2
-                            if company[headersCsv[9]]['valor'] == '' or company[headersCsv[9]]['fuente'] == '':
+                            if company[headersCsv[9]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Linkedin","Link", url, item)
                                 company[headersCsv[9]]['valor'] = outputs if company[headersCsv[9]]['valor'] == '' else outputs
                                 company[headersCsv[9]]['fuente'] = url_2
-                            if company[headersCsv[10]]['valor'] == '' or company[headersCsv[10]]['fuente'] == '':
+                            if company[headersCsv[10]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Facebook","Link", url, item)
                                 company[headersCsv[10]]['valor'] = outputs if company[headersCsv[10]]['valor'] == '' else outputs
                                 company[headersCsv[10]]['fuente'] = url_2
-                            if company[headersCsv[11]]['valor'] == '' and company[headersCsv[11]]['fuente'] == '':
+                            if company[headersCsv[11]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Twitter","Link", url, item)
                                 company[headersCsv[11]]['valor'] = outputs if company[headersCsv[11]]['valor'] == '' else outputs
                                 company[headersCsv[11]]['fuente'] = url_2
-                            if company[headersCsv[12]]['valor'] == '' or company[headersCsv[12]]['fuente'] == '':
+                            if company[headersCsv[12]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Instagram","Link", url, item)
                                 company[headersCsv[12]]['valor'] = outputs if company[headersCsv[12]]['valor'] == '' else outputs
@@ -865,12 +889,12 @@ class WebScrappingCompany:
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Localidad:","Info", url, item)
                                 company[headersCsv[13]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[13]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[13]]['fuente'] = url_2
-                            if company[headersCsv[14]]['valor'] == '' or company[headersCsv[14]]['fuente'] == '':
+                            if company[headersCsv[14]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Facturacion:","Info", url, item)
                                 company[headersCsv[14]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[14]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[14]]['fuente'] = url_2
-                            if company[headersCsv[15]]['valor'] == '' and company[headersCsv[15]]['fuente'] == '':
+                            if company[headersCsv[15]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Empleados:","Info", url, item)
                                 company[headersCsv[15]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[15]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
@@ -884,7 +908,7 @@ class WebScrappingCompany:
                 #continue
     
     def getRequestPageDetailInfo(self, pageCompany, fullUrl, company, headersCsv,item):
-        proxies = {'https': 'https://user-59460:user-59460@77.74.194.138:1212'}
+        proxies = {'https': 'https://user-59460:user-59460@91.219.28.111:1212'}
         proxy_pool = cycle(proxies)
         proxy = next(proxy_pool)
         pageDetail = requests.get(pageCompany,proxies=proxies)
