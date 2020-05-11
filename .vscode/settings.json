@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\A101107252\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
+    "python.pythonPath": "C:\\Users\\A101107252\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
+    "terminal.integrated.scrollback": 999999
 }

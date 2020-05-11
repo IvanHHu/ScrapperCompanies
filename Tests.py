@@ -2,8 +2,9 @@ from enum import Enum
 class Tests:
     def main(self):
         #string = '//-- ..Genral asde SA (), dsdssd . dsdsd € \n  dkksjd'
-        string = 'Jmontero@Ns- Group.Com; Web Www.Nutri'
-        string = self.cleanStringData(string, StringType.Email)
+        #string = 'Jmontero@Ns- Group.Com; Web Www.Nutri'
+        #string = self.cleanStringData(string, StringType.Email)
+        self.getType([])
 
     def cleanStringData(self,texto, typeString):
         import re
@@ -40,6 +41,10 @@ class Tests:
             stringLimpio = pagina.group(0)
         print('Nuevo String ', stringLimpio)
         return stringLimpio
+
+    def getType(self,obj):
+        print(type(obj))
+        print('list' in str(type(obj)))
 
 class StringType(Enum):
     AlfaNumerico = 1

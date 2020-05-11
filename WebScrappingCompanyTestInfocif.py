@@ -62,7 +62,7 @@ class WebScrappingCompany:
             csvF.setPathFile(sys.argv[1:][0])
             sourceList = csvF.readFile(False)
             if sourceList != []:
-                sourceList.pop(0)
+                #sourceList.pop(0)
                 listOfHeadersInput = sourceList[0]
                 sourceList.pop(0)
                 for sourceItems in sourceList:
@@ -974,7 +974,7 @@ class WebScrappingCompany:
         return company
 
     def cleanUrl(self, url, srcWeb):
-        if srcWeb == WebSite.INFOEMPRESA.value:
+        if srcWeb == WebSite.INFOCIF.value:
             url = 'http://' + str(url).strip('http://')
         '''elif srcWeb == WebSite.AXESOR.value:
             url = 'http://' + str(url).strip('//')
