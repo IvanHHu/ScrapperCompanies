@@ -18,11 +18,11 @@ class WebScrappingCompany:
 
     def __init__(self):
         self.Labels = {
-            'Nombre':{'INFOCIF':'Nombre','GUIAEMPRESAS':'Nombre','AXESOR':'Nombre','INFOEMPRESA':'Nombre','EMPRESITE':'RazÃ³n Social','GOOGLE':'Nombre'},
+            'Nombre':{'INFOCIF':'Nombre','GUIAEMPRESAS':'Nombre','AXESOR':'Nombre','INFOEMPRESA':'Nombre','EMPRESITE':'Razón Social','GOOGLE':'Nombre'},
             'Brand':{'INFOCIF':'Marca','GUIAEMPRESAS':'Marca','AXESOR':'Marca','INFOEMPRESA':'Marca','EMPRESITE':'Marca','GOOGLE':'Marca'},
             'Website':{'INFOCIF':'Web','GUIAEMPRESAS':'Web','AXESOR':'Sitio Web','INFOEMPRESA':'Web','EMPRESITE':'Web','GOOGLE':'Web'},
             'NIF':{'INFOCIF':'CIF','GUIAEMPRESAS':'NIF','AXESOR':'CIF','INFOEMPRESA':'NIF/CIF','EMPRESITE':'CIF','Google':'NIF'},
-            'Phone_Number':{'INFOCIF':'TelÃ©fono','GUIAEMPRESAS':'TelÃ©fono','AXESOR':'TelÃ©fono','INFOEMPRESA':'TelÃ©fono','EMPRESITE':'TelÃ©fono','GOOGLE':'TelÃ©fono'},              
+            'Phone_Number':{'INFOCIF':'Teléfono','GUIAEMPRESAS':'Teléfono','AXESOR':'Teléfono','INFOEMPRESA':'Teléfono','EMPRESITE':'Teléfono','GOOGLE':'Teléfono'},              
             'Email':{'INFOCIF':'Email','GUIAEMPRESAS':'Email','AXESOR':'Email','INFOEMPRESA':'Email','EMPRESITE':'Email','GOOGLE':'Email'},
             'Industry':{'INFOCIF':'Sector','GUIAEMPRESAS':'Sector','AXESOR':'Sector','INFOEMPRESA':'Sector','EMPRESITE':'Actividad','Google':'Sector'},
             'Contacts':{'INFOCIF':'Contacto','GUIAEMPRESAS':'Contactos','AXESOR':'Contactos','INFOEMPRESA':'Contactos','EMPRESITE':'Contactos','GOOGLE':'Contactos'},              
@@ -31,9 +31,9 @@ class WebScrappingCompany:
             'Facebook':{'INFOCIF':'Facebook','GUIAEMPRESAS':'Facebook','AXESOR':'Facebook','INFOEMPRESA':'Facebook','EMPRESITE':'Facebook','GOOGLE':'Facebook'},
             'Twitter':{'INFOCIF':'Twitter','GUIAEMPRESAS':'Twitter','AXESOR':'Twitter','INFOEMPRESA':'Twitter','EMPRESITE':'Twitter','Google':'Twitter'},
             'Instagram':{'INFOCIF':'Instagram','GUIAEMPRESAS':'Instagram','AXESOR':'Instagram','INFOEMPRESA':'Instagram','EMPRESITE':'Instagram','GOOGLE':'Instagram'},              
-            'City':{'INFOCIF':'Domicilio','GUIAEMPRESAS':'Localidad','AXESOR':'DirecciÃ³n','INFOEMPRESA':'DirecciÃ³n','EMPRESITE':'Domicilio Social','GOOGLE':'Ciudad'},
+            'City':{'INFOCIF':'Domicilio','GUIAEMPRESAS':'Localidad','AXESOR':'Dirección','INFOEMPRESA':'Dirección','EMPRESITE':'Domicilio Social','GOOGLE':'Ciudad'},
             'Facturacion':{'INFOCIF':'Facturacion','GUIAEMPRESAS':'Ventas','AXESOR':'Facturacion','INFOEMPRESA':'Facturacion','EMPRESITE':'Rango de Ventas','Google':'Facturacion'},
-            'Empleados':{'INFOCIF':'NÂº de empleados','GUIAEMPRESAS':'Empleados','AXESOR':'Empleados','INFOEMPRESA':'Empleados','EMPRESITE':'Rango de Empleados','GOOGLE':'Empleados'}}              
+            'Empleados':{'INFOCIF':'Nº de empleados','GUIAEMPRESAS':'Empleados','AXESOR':'Empleados','INFOEMPRESA':'Empleados','EMPRESITE':'Rango de Empleados','GOOGLE':'Empleados'}}              
         
         self.sourceList = []
         self.csvF = WbUtils.WbUtils()
@@ -53,21 +53,6 @@ class WebScrappingCompany:
         self.SRCHNOTFOUND2="No se han encontrado resultados"
         self.FoundData = False
         self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0'}
-        self.proxies = {'http': ['104.244.77.254:8080',
-                    '154.16.202.22:8080',
-                    '176.9.119.170:3128',
-                    '176.9.75.42:8080',
-                    '136.244.84.26:8080',
-                    '148.251.14.210:3128',
-                    '176.9.75.42:3128',
-                    '188.226.141.211:8080',
-                    '188.166.83.17:3128',
-                    '207.154.231.213:8080',
-                    '217.163.28.105:80',
-                    '188.226.141.211:3128',
-                    '188.226.141.61:8080',
-                    '88.198.24.108:8080',
-                    '46.4.96.137:3128']}
 
     def main(self):
         sourceList = []
@@ -110,7 +95,7 @@ class WebScrappingCompany:
             objCompany[key] = {'valor' : '', 'fuente': ''}
         return objCompany
 
-    #MÃ©todo que construye la URL dependiendo del sitio
+    #Método que construye la URL dependiendo del sitio
     #forma una lista con la URL, el tipo de URL, la fuente (sitio web enum) y los criterios de busqueda
     def buildUrl(self,v):
         url = ""
@@ -156,7 +141,7 @@ class WebScrappingCompany:
             
         return fullUrl
     
-    #MÃ©todo que obtiene la lista de links arrojados por una busqueda, dependiendo de la pÃ¡gina
+    #Método que obtiene la lista de links arrojados por una busqueda, dependiendo de la página
     def getListLinks(self, txtHtml,srcWeb = 0):
         rL = []
         if srcWeb == WebSite.INFOCIF.value:
@@ -173,7 +158,7 @@ class WebScrappingCompany:
             rL = txtHtml.xpath('//div[contains(@class, "rc")]/div/a')
         return rL
     
-    #MÃ©todo que obtiene los contenedores del detalle de la informaciÃ³n de las empresas dependiendo de la pagina
+    #Método que obtiene los contenedores del detalle de la información de las empresas dependiendo de la pagina
     def getOutputsContainer(self, webSrc, txtHtml):
         r = None
         if webSrc == WebSite.INFOCIF.value:
@@ -188,7 +173,7 @@ class WebScrappingCompany:
             r = txtHtml.xpath('//section[contains(@id, "datos-externos1")]')
         return r
 
-    #MÃ©todo que obtiene el matchratio de las cadenas encontradas en la lista de resultados dependiendo del parametro de cada pagina
+    #Método que obtiene el matchratio de las cadenas encontradas en la lista de resultados dependiendo del parametro de cada pagina
     def getMatchRatioFromStr(self, srcWeb, params, link):
         matchRatioStr = 0.0
         if srcWeb == WebSite.INFOCIF.value:
@@ -211,7 +196,7 @@ class WebScrappingCompany:
             print("Aqui va el link")
             print ("Este el item " + item)
             params = {'q': str(field) + ' ' + item}
-            page = requests.get(url, params=params, proxies=self.proxies, stream=True)
+            page = requests.get(url, params=params, stream=True)
             page.encoding = 'ISO-8859-1'
             url_2 = page.url
             if page.status_code == 200:
@@ -234,7 +219,7 @@ class WebScrappingCompany:
                                 break
         else:
             print("Aqui va la info")
-            params = {'q': str(field) + ' "' + item + '"'}
+            params = {'q': str(field) + ' ' + item}
             page = requests.get(url, params=params, stream=True)
             page.encoding = 'ISO-8859-1'
             url_2 = page.url
@@ -249,172 +234,90 @@ class WebScrappingCompany:
                 print(html_text)
                 listStr = ''
                 if field_l == "localidad:":
-                    listStr = re.findall(r"localidad[\s,:;][\s,:;][\sa-zA-Z]{1,20}[.,]",html_text)
+                    listStr = re.findall("localidad [ ,:;] .[a-zA-Z]{1,20}",html_text)
                     if len(listStr) > 0:
-                        cnt = 0
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
                             if strI != '':
-                                dato = strI
-                                break
-                                '''if cnt <= len(listStr) - 1:
-                                    dato += strI + '-'
+                                if cnt <= len(listStr) - 1:
+                                    dato += strI + '/'
                                 else:
                                     dato += strI
                             cnt +=1'''
-                    dato = dato.replace('localidad','')
-                    if len(dato) > 0 and 'CUALQUIER' not in dato.upper():
-                        if dato[0] == ':':
-                            dato = dato[2:len(dato)]
-                            #dato.lstrip(': ')
-                        elif dato[0] == ',':
-                            dato = dato[2:len(dato)]
-                            #dato.lstrip(', ')
-                        elif dato[0] == ';':
-                            dato = dato[2:len(dato)]
-                            #dato.lstrip(';')
-                        if dato[-1:] == '.':
-                            dato = dato[0:-1]
-                            #dato.rstrip('.-')
-                        dato = dato.upper()
                 if field_l == "cif/nif:":
-                    listStr = re.findall(r"[ab][0-9]{1,9}",html_text)
+                    listStr = re.findall("[ab][0-9]{1,9}",html_text)
                     if len(listStr) > 0:
-                        cnt = 0
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
-                            if strI != '' and (len(strI) == 9 and strI not in dato):
+                            if strI != '':
                                 if cnt < len(listStr) - 1:
-                                    dato += strI.replace(':','').replace(' ','') + '-'
+                                    dato += strI.replace(':','').replace(' ','') + '_'
                                 else:
-                                    dato += strI.replace(':','').replace(' ','')
-                        if dato[-1:] == '-':
-                            dato = dato[0:-1]
+                                    dato += strI.replace(':','').replace(' ','')'''
+                    #dato= dato[0].replace(':','').replace(' ','')
                 if field_l == "email:":
-                    listStr = re.findall(r"\w+@\w+\.\w+",html_text)                    
-                    #listStr = re.findall(r'[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,6}',html_text)
+                    listStr = re.findall(r"\w+@\w+\.\w+",html_text)
                     if len(listStr) > 0:
-                        cnt = 0
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
                             if strI != '':
                                 if cnt < len(listStr) - 1:
-                                    dato += strI + '-'
+                                    dato += strI + '/'
                                 else:
-                                    dato += strI
+                                    dato += strI'''
                 if field_l == "telefono:":
-                    listStr = re.findall(r'\s[{}+()0-9\s]{8,25}',html_text)
-                    #dato = html_text
-                    print(listStr)
+                    listStr = re.findall('[:,.] [0-9]{8,10}',html_text)
                     if len(listStr) > 0:
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
-                            cnt = 0
                             if strI != '':
                                 if cnt <= len(listStr) - 1:
-                                    dato += strI + '-'
+                                    dato += strI + '/'
                                 else:
                                     dato += strI
-                            cnt +=1
+                            cnt +=1'''
                 if field_l == "denominacion:":
-                    dato = html_text
-                    '''listStr = re.findall(r'denominacion[:,.][a-zA-Z]{1,20}[:,.]',html_text)
+                    listStr = re.findall('denominacion[:,.][a-zA-Z]{1,20}[:,.]',html_text)
                     if len(listStr) > 0:
-                        cnt = 0
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
                             if strI != '':
                                 if cnt <= len(listStr) - 1:
-                                    dato += strI + '-'
+                                    dato += strI + '/'
                                 else:
                                     dato += strI
                             cnt +=1'''
                 if field_l == "cnae 2009:":
-                    #dato = html_text
-                    start = html_text.find('cnae 2009')
-                    end = 0
-                    html_text_tmp = html_text[start: len(html_text)]
-                    for idx, itm in enumerate(html_text_tmp) :
-                        if itm =='.' or itm == '|' or itm == '-':
-                            end = idx
-                            break
-                            #print(idx, itm)
-                    dato = re.compile(r'^[\W]+', re.UNICODE).split(html_text_tmp[0:end])
-                    #if 'http' not in dato[0]:
-                    dato = str(dato[0])[0:100] if 'http' not in dato[0] else ''
-                    #else:
-                    #    dato = ''
-                    if dato == '':
-                        start = html_text.find('sector de la empresa:')
-                        end = 0
-                        html_text_tmp = html_text[start: len(html_text)]
-                        end = html_text_tmp.find('nÂº')
-                        dato = re.compile(r'^[\W]+', re.UNICODE).split(html_text_tmp[0:end])
-                        dato = dato[0] if len(dato) > 0 else ''
-                    '''listStr = re.findall(r'cnae 2009[\s:,.][,.\sa-zA-Z0-9-]{1,200}\n',html_text, re.UNICODE)
+                    listStr = re.findall('cnae[ :,.][a-zA-Z]{1,20}[:,.]',html_text)
                     if len(listStr) > 0:
-                        cnt = 0
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
                             if strI != '':
                                 if cnt <= len(listStr) - 1:
-                                    dato += strI + '-'
+                                    dato += strI + '/'
                                 else:
                                     dato += strI
                             cnt +=1'''
-                if field_l == "empleados:":
-                    #dato = html_text
-                    start = html_text.find('cuenta con entre')
-                    html_text_tmp = html_text[start: len(html_text)]
-                    end = html_text_tmp.find('empleados') + 9
-                    dato = re.findall(r'entre [\s0-9]{1,8}\s[a-y]\s[\s0-9a-z]{1,100}.\s', html_text_tmp[0:end])
-                    dato = str(dato[0]).replace('cuenta con ','') if len(dato) > 0 else ''
-                    if dato == '':
-                        start = html_text.find('nÂº de empleados: ')
-                        html_text_tmp = html_text[start: len(html_text)]
-                        end = html_text_tmp.find('telÃ©fono')
-                        dato = html_text_tmp[0:end]
-                        dato = str(dato).replace('nÂº de empleados: ','') if len(dato) > 0 else ''
-                    print(dato)
-                    '''listStr = re.findall(r'[\s0-9]{1,8}\s[a-y]\s[\s0-9a-z]{1,100}.\s',html_text)
-                    if len(listStr) > 0:
-                        #dato = listStr[0]
-                        cnt = 0
-                        for strI in listStr:
-                            if strI != '':
-                                if cnt <= len(listStr) - 1:
-                                    dato += strI + '-'
-                                else:
-                                    dato += strI
-                            cnt +=1
-                        dato = dato[0:dato.find('. -')]'''
                 if field_l == "facturacion:":
-                    #dato = html_text
-                    start = html_text.find('facturaciÃ³n anual')
-                    if start != -1:
-                        html_text_tmp = html_text[start: len(html_text)]
-                        end = html_text_tmp.find('euros')
-                        dato = re.compile(r'^[\W]+', re.UNICODE).split(html_text_tmp[0:end-1])
-                        dato = str(dato[0]).replace('facturaciÃ³n anual','') + " â‚¬" if len(dato) > 0 else ''
-                        print(dato)
-                    else:
-                        dato = ''
-                    '''if len(listStr) == 0:
-                        listStr = re.findall(r'[0-9.]{1,8} â‚¬ [0-9.]{1,8}â‚¬',html_text)
-                    if len(listStr) == 0:
-                        listStr = re.findall(r'entre [a-zA-Z0-9.\s]{1,1000}.',html_text)
-                    if len(listStr) == 0:
-                        listStr = re.findall(r'anual de menos de[a-zA-Z0-9.\s,:]{1,1000}.\s',html_text)
+                    listStr = re.findall('[0-9]{1,8} € - [0-9]{1,8}€',html_text)
                     if len(listStr) > 0:
-                        #dato = listStr[0]
-                        cnt = 0
+                        dato = listStr[0]
+                        '''cnt = 0
                         for strI in listStr:
                             if strI != '':
                                 if cnt <= len(listStr) - 1:
-                                    dato += strI + '-'
+                                    dato += strI + '/'
                                 else:
                                     dato += strI
-                            cnt +=1
-                    else:
-                        dato = ''
-                        '''
+                            cnt +=1'''
                 print(dato)
         return dato, url_2
-
 
     def get_proxies(self):
         url = 'https://free-proxy-list.net/'
@@ -437,7 +340,7 @@ class WebScrappingCompany:
                 for elem in field.xpath('//strong[contains(@class, "fwb")]/text()'):
                     if elem != []:
                         print(elem)
-                        if 'Anterior DenominaciÃ³n' not in str(elem):
+                        if 'Anterior Denominación' not in str(elem):
                             if '-' in str(elem): 
                                 strCargos = str(elem)                         
                                 end = strCargos.find('-')
@@ -474,7 +377,7 @@ class WebScrappingCompany:
                     if "empleados" in field.xpath(xpathEmpVta)[0]:
                         oData.append('Empleados')
                     if "ventas" in field.xpath(xpathEmpVta)[0]:
-                        oData.append('FacturaciÃ³n')
+                        oData.append('Facturación')
             elif webSrc == WebSite.INFOEMPRESA.value:     
                 #oData = field.xpath('//ul[contains(@class, "list-company-data")]/li/span[1]/text()')       
                 count = field.xpath('count(//ul[contains(@class, "list-company-data")]/li)')
@@ -508,8 +411,8 @@ class WebScrappingCompany:
                     strEmpVta = field.xpath(xpathEmpVta)[0]
                     if "empleados" in strEmpVta:
                         oData.append('Empleados')
-                    if "facturaciÃ³n" in strEmpVta:
-                        oData.append('FacturaciÃ³n')
+                    if "facturación" in strEmpVta:
+                        oData.append('Facturación')
             elif webSrc == WebSite.EMPRESITE.value:
                 #oData = field.xpath('//ul[contains(@class, "list06")]/li/strong/text()')
                 count = field.xpath('count(//section[contains(@id, "datos-einforma")]/ul/li)')
@@ -636,12 +539,12 @@ class WebScrappingCompany:
                         oData.append(strEmp[start:end]) 
                     if "ventas de entre" in strEmp:
                         start = strEmp.find('ventas') + 10
-                        end = strEmp.find('â‚¬.') + 1
+                        end = strEmp.find('€.') + 1
                         print("342 ", strEmp[start:end])
                         oData.append(strEmp[start:end]) 
-                    elif "ventas de mÃ¡s de" in strEmp:
+                    elif "ventas de más de" in strEmp:
                         start = strEmp.find('ventas') + 10
-                        end = strEmp.find('â‚¬.') + 1 
+                        end = strEmp.find('€.') + 1 
                         print("347 ", strEmp[start:end])
                         oData.append(strEmp[start:end])   
             elif webSrc == WebSite.INFOEMPRESA.value:
@@ -683,21 +586,21 @@ class WebScrappingCompany:
                             end = strEmp.find('empleados')
                             print("393 ", strEmp[start:end])
                             oData.append(strEmp[start:end])   
-                        elif "cuenta con mÃ¡s" in strEmp:
+                        elif "cuenta con más" in strEmp:
                             start = strEmp.find('cuenta con') + 10
                             end = strEmp.find('empleados')
                             print("398 ", strEmp[start:end])
                             oData.append(strEmp[start:end])
-                    if "facturaciÃ³n anual de entre" in strEmp:
-                        start = strEmp.find('facturaciÃ³n anual de entre') + 21
+                    if "facturación anual de entre" in strEmp:
+                        start = strEmp.find('facturación anual de entre') + 21
                         end = strEmp.find('euros.')
                         print("403 ", strEmp[start:end])
-                        oData.append(strEmp[start:end] + "â‚¬")
-                    elif "facturaciÃ³n anual de mÃ¡s" in strEmp:
-                        start = strEmp.find('facturaciÃ³n anual de mÃ¡s') + 20
+                        oData.append(strEmp[start:end] + "€")
+                    elif "facturación anual de más" in strEmp:
+                        start = strEmp.find('facturación anual de más') + 20
                         end = strEmp.find('euros.')
                         print("403 ", strEmp[start:end])
-                        oData.append(strEmp[start:end] + "â‚¬")
+                        oData.append(strEmp[start:end] + "€")
             elif webSrc == WebSite.EMPRESITE.value:
                 #oData = field.xpath('//ul[contains(@class, "list06")]/li/span/text()')
                 count = field.xpath('count(//section[contains(@id, "datos-einforma")]/ul/li)')
@@ -816,8 +719,10 @@ class WebScrappingCompany:
                     url= fullUrl['url']
                     #print('URL de busqueda: ' + url)
                     params = None
-                    IsGOOGLE = False
-                    NoEntrar = True
+                    #IsGOOGLE = False
+                    IsGOOGLE = True
+                    #NoEntrar = True
+                    NoEntrar = False
                     if fullUrl['type'] == 'd':
                         if fullUrl['src'] == WebSite.INFOCIF.value:
                             params = fullUrl['params']
@@ -846,7 +751,7 @@ class WebScrappingCompany:
                             page = None
                             if fullUrl['type'] == 'd':
                                 #page = requests.get(url, params=params, proxies=proxies, timeout=5)
-                                page = requests.get(url, params=params, proxies=self.proxies, timeout=5)
+                                page = requests.get(url, params=params, timeout=5)
                             else:
                                 print(url+params['pathSearch'])
                                 #page = requests.get(url+params['pathSearch'], proxies=proxies, timeout=5)
@@ -909,88 +814,88 @@ class WebScrappingCompany:
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Empresa:","Info", url, item)
                                 #company[headersCsv[0]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[0]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[0]]['valor'] = outputs if company[headersCsv[0]]['valor'] == '' else outputs
-                                company[headersCsv[0]]['fuente'] = url_2 if company[headersCsv[0]]['valor'] != '' else ''
+                                company[headersCsv[0]]['fuente'] = url_2
                             if company[headersCsv[1]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Denominacion","Info", url, item)
                                 #company[headersCsv[1]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[1]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[1]]['valor'] = outputs if company[headersCsv[1]]['valor'] == '' else outputs
-                                company[headersCsv[1]]['fuente'] = url_2 if company[headersCsv[1]]['valor'] != '' else ''
+                                company[headersCsv[1]]['fuente'] = url_2
                             if company[headersCsv[3]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("CIF/NIF:","Info", url, item)
                                 #company[headersCsv[3]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumerico) if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumerico)
                                 company[headersCsv[3]]['valor'] = outputs.upper() if company[headersCsv[3]]['valor'] == '' else outputs.upper()
-                                company[headersCsv[3]]['fuente'] = url_2 if company[headersCsv[3]]['valor'] != '' else ''
+                                company[headersCsv[3]]['fuente'] = url_2
                             if company[headersCsv[4]]['valor'] == '':
                                 if str(outputs)[0:3] != 902 or str(outputs)[0:3] != 901:
                                     self.FoundData == True
                                     outputs, url_2 = self.getOutputDataFromHtml_Google("Telefono","Info", url, item)
                                     #company[headersCsv[4]]['valor'] = self.cleanStringData(outputs,StringType.Telefono) if company[headersCsv[4]]['valor'] == '' else self.cleanStringData(outputs,StringType.Telefono)
                                     company[headersCsv[4]]['valor'] = outputs if company[headersCsv[4]]['valor'] == '' else outputs
-                                    company[headersCsv[4]]['fuente'] = url_2 if company[headersCsv[4]]['valor'] != '' else ''
+                                    company[headersCsv[4]]['fuente'] = url_2
                             if company[headersCsv[5]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Email","Info", url, item)
                                 #company[headersCsv[5]]['valor'] = self.cleanStringData(outputs,StringType.Email) if company[headersCsv[5]]['valor'] == '' else self.cleanStringData(outputs,StringType.Email)
                                 company[headersCsv[5]]['valor'] = outputs if company[headersCsv[5]]['valor'] == '' else outputs
-                                company[headersCsv[5]]['fuente'] = url_2 if company[headersCsv[4]]['valor'] != '' else ''
+                                company[headersCsv[5]]['fuente'] = url_2
                             if company[headersCsv[6]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("CNAE 2009:","Info", url, item)
                                 #company[headersCsv[6]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[6]]['valor'] = outputs if company[headersCsv[6]]['valor'] == '' else outputs
-                                company[headersCsv[6]]['fuente'] = url_2 if company[headersCsv[6]]['valor'] != '' else ''
+                                company[headersCsv[6]]['fuente'] = url_2
                             if company[headersCsv[7]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Contacts","Info", url, item)
                                 #company[headersCsv[7]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumerico) if company[headersCsv[7]]['valor'] == '' else self.cleanStringData(outputs, StringType.AlfaNumerico)
                                 company[headersCsv[7]]['valor'] = outputs if company[headersCsv[7]]['valor'] == '' else outputs
-                                company[headersCsv[7]]['fuente'] = url_2 if company[headersCsv[7]]['valor'] != '' else ''
+                                company[headersCsv[7]]['fuente'] = url_2
                             if company[headersCsv[8]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Contacts Title","Info", url, item)
                                 #company[headersCsv[8]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[8]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[8]]['valor'] = outputs if company[headersCsv[8]]['valor'] == '' else outputs
-                                company[headersCsv[8]]['fuente'] = url_2 if company[headersCsv[8]]['valor'] != '' else ''
+                                company[headersCsv[8]]['fuente'] = url_2
                             if company[headersCsv[9]]['valor'] == '' :
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Linkedin","Link", url, item)
                                 company[headersCsv[9]]['valor'] = outputs if company[headersCsv[9]]['valor'] == '' else outputs
-                                company[headersCsv[9]]['fuente'] = url_2 if company[headersCsv[9]]['valor'] != '' else ''
+                                company[headersCsv[9]]['fuente'] = url_2
                             if company[headersCsv[10]]['valor'] == '':
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Facebook","Link", url, item)
                                 company[headersCsv[10]]['valor'] = outputs if company[headersCsv[10]]['valor'] == '' else outputs
-                                company[headersCsv[10]]['fuente'] = url_2 if company[headersCsv[10]]['valor'] != '' else ''
+                                company[headersCsv[10]]['fuente'] = url_2
                             if company[headersCsv[11]]['valor'] == '' :
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Twitter","Link", url, item)
                                 company[headersCsv[11]]['valor'] = outputs if company[headersCsv[11]]['valor'] == '' else outputs
-                                company[headersCsv[11]]['fuente'] = url_2 if company[headersCsv[11]]['valor'] != '' else ''
+                                company[headersCsv[11]]['fuente'] = url_2
                             if company[headersCsv[12]]['valor'] == '' :
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Instagram","Link", url, item)
                                 company[headersCsv[12]]['valor'] = outputs if company[headersCsv[12]]['valor'] == '' else outputs
-                                company[headersCsv[12]]['fuente'] = url_2 if company[headersCsv[12]]['valor'] != '' else ''
+                                company[headersCsv[12]]['fuente'] = url_2
                             if company[headersCsv[13]]['valor'] == '' :
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Localidad:","Info", url, item)
                                 #company[headersCsv[13]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[13]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[13]]['valor'] = outputs if company[headersCsv[13]]['valor'] == '' else outputs
-                                company[headersCsv[13]]['fuente'] = url_2 if company[headersCsv[13]]['valor'] != '' else ''
+                                company[headersCsv[13]]['fuente'] = url_2
                             if company[headersCsv[14]]['valor'] == '' :
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Facturacion:","Info", url, item)
                                 #company[headersCsv[14]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[14]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[14]]['valor'] = outputs if company[headersCsv[14]]['valor'] == '' else outputs
-                                company[headersCsv[14]]['fuente'] = url_2 if company[headersCsv[14]]['valor'] != '' else ''
+                                company[headersCsv[14]]['fuente'] = url_2
                             if company[headersCsv[15]]['valor'] == '' :
                                 self.FoundData == True
                                 outputs, url_2 = self.getOutputDataFromHtml_Google("Empleados:","Info", url, item)
                                 #company[headersCsv[15]]['valor'] = self.cleanStringData(outputs,StringType.AlfaNumericoExt) if company[headersCsv[15]]['valor'] == '' else self.cleanStringData(outputs,StringType.AlfaNumericoExt)
                                 company[headersCsv[15]]['valor'] = outputs if company[headersCsv[15]]['valor'] == '' else outputs
-                                company[headersCsv[15]]['fuente'] = url_2 if str(company[headersCsv[15]]['valor']).strip() != '' else ''
+                                company[headersCsv[15]]['fuente'] = url_2
                     except RequestException as e:
                         print('Exception: ', e)
                         #break
@@ -1004,7 +909,7 @@ class WebScrappingCompany:
         #proxy_pool = cycle(proxies)
         #proxy = next(proxy_pool)
         #pageDetail = requests.get(pageCompany,proxies=proxies)
-        pageDetail = requests.get(pageCompany, proxies=self.proxies)
+        pageDetail = requests.get(pageCompany)
         pageDetail.encoding = 'ISO-8859-1'
         if pageDetail.status_code == 200 :
             txtHtml = html.fromstring(pageDetail.text)

@@ -1,10 +1,62 @@
 from enum import Enum
+import re
 class Tests:
     def main(self):
         #string = '//-- ..Genral asde SA (), dsdssd . dsdsd € \n  dkksjd'
         #string = 'Jmontero@Ns- Group.Com; Web Www.Nutri'
         #string = self.cleanStringData(string, StringType.Email)
-        self.getType([])
+        #self.getType([])
+        html_text = ' de una empresa>como saber cuánto factura una empresa argentina>datos de facturación de una empresa>como saber cuanto factura mi competencia>sociedad limitada: características>  siguiente >  iniciar sesiónpreferenciasprivacidadcondicione '
+        print(html_text)
+        print()
+        #EMpleados
+        '''start = html_text.find('cuenta con entre')
+        html_text_tmp = html_text[start: len(html_text)]
+        end = html_text_tmp.find('empleados') + 9
+        dato = re.findall(r'entre [\s0-9]{1,8}\s[a-y]\s[\s0-9a-z]{1,100}.\s', html_text_tmp[0:end])
+        dato = str(dato[0]).replace('cuenta con ','') if len(dato) > 0 else ''
+        if dato == '':
+            start = html_text.find('nº de empleados: ')
+            html_text_tmp = html_text[start: len(html_text)]
+            end = html_text_tmp.find('teléfono')
+            dato = html_text_tmp[0:end]
+            dato = str(dato).replace('nº de empleados: ','') if len(dato) > 0 else ''
+        print(dato)'''
+
+        #FACTURACION
+        start = html_text.find('facturación anual')
+        if start != -1:
+            html_text_tmp = html_text[start: len(html_text)]
+            end = html_text_tmp.find('euros')
+            dato = re.compile(r'^[\W]+', re.UNICODE).split(html_text_tmp[0:end-1])
+            dato = str(dato[0]).replace('facturación anual','') + " €" if len(dato) > 0 else ''
+            print(dato)
+        else:
+            dato = ''
+        
+        #CNAE
+        '''start = html_text.find('cnae 2009')
+        end = 0
+        html_text_tmp = html_text[start: len(html_text)]
+        for idx, itm in enumerate(html_text_tmp) :
+            if itm =='.' or itm == '|' or itm == '-':
+                end = idx
+                break
+                #print(idx, itm)
+        dato = re.compile(r'^[\W]+', re.UNICODE).split(html_text_tmp[0:end])
+        if 'http' not in dato[0]:
+            dato = str(dato[0])[0:100]
+        else:
+            dato = ''
+        if dato == '':
+            start = html_text.find('sector de la empresa:')
+            end = 0
+            html_text_tmp = html_text[start: len(html_text)]
+            end = html_text_tmp.find('nº')
+            dato = re.compile(r'^[\W]+', re.UNICODE).split(html_text_tmp[0:end])
+            print(dato)'''
+
+
 
     def cleanStringData(self,texto, typeString):
         import re
