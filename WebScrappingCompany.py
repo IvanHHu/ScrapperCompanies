@@ -817,8 +817,10 @@ class WebScrappingCompany:
         #outputList = []
         #outputList = {}
         for index, item in enumerate(sourceItems):
-            item_2 = item.replace('SL','Sociedad Limitada').replace('Sl','Sociedad Limitada').replace('sl','Sociedad Limitada').replace('sL','Sociedad Limitada')
-            item_2 = item_2.replace('SA','Sociedad Anonima').replace('Sa','Sociedad Anonima').replace('sa','Sociedad Anonima').replace('sA','Sociedad Anonima')
+            #item_2 = item.replace('SL','Sociedad Limitada').replace('Sl','Sociedad Limitada').replace('sl','Sociedad Limitada').replace('sL','Sociedad Limitada')
+            item_2 = item.upper().replace(' S A',' SA').replace(' S L',' SL').replace(' SL ',' SOCIEDAD LIMITADA').replace(' SA ',' SOCIEDAD ANONIMA')
+            #item_2 = item_2.replace('SA','Sociedad Anonima').replace('Sa','Sociedad Anonima').replace('sa','Sociedad Anonima').replace('sA','Sociedad Anonima')
+            #item_2 = item_2.upper().replace('SA','Sociedad Anonima').replace('Sa','Sociedad Anonima').replace('sa','Sociedad Anonima').replace('sA','Sociedad Anonima')
             #if item != '':
             if item != '' and item != 'N/A':
                 if item != 'N/A':
@@ -908,6 +910,7 @@ class WebScrappingCompany:
                             page.close()
                         elif IsGOOGLE == True and NoEntrar == False:
                             #item = item.replace(' SL ',' Sociedad Limitada').replace(' Sl ',' Sociedad Limitada').replace(' sl ',' Sociedad Limitada').replace(' sL ',' Sociedad Limitada')
+                            item = item.upper().replace(' S A',' SA').replace(' S L',' SL').replace(' SL ',' SOCIEDAD LIMITADA').replace(' SA ',' SOCIEDAD ANONIMA')
                             #item = item.replace(' SA ','Sociedad Anonima').replace(' Sa ',' Sociedad Anonima').replace(' sa ',' Sociedad Anonima').replace(' sA ',' Sociedad Anonima')
                             if company[headersCsv[2]]['valor'] == '':
                                 self.FoundData == True
