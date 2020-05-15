@@ -677,13 +677,16 @@ class WebScrappingCompany:
                                 strTitle = str(field.xpath(xpathNif)[0]).split(':')
                                 tditem.append(str(strTitle[1]).strip())
                         elif i == 2:
-                            if field.xpath(xpath) != []:
+                            if field.xpath(xpathPsS) != []:
+                                strTitle = field.xpath(xpathPsS)
+                                tditem.append(str(strTitle[0]).upper().replace('NO DISPONIBLE',''))
+                            elif field.xpath(xpath) != []:
                                 strTitle = field.xpath(xpath)
                                 tditem.append(strTitle[0])
                         elif i == 3:
                             if field.xpath(xpathPsS) != []:
                                 strTitle = field.xpath(xpathPsS)
-                                tditem.append(strTitle[0])
+                                tditem.append(str(strTitle[0]).upper().replace('NO DISPONIBLE',''))
                             elif field.xpath(xpath) != []:
                                 strTitle = field.xpath(xpath)
                                 tditem.append(str(strTitle[0]).replace('Ã³','o'))
