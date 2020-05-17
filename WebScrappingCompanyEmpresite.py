@@ -102,7 +102,7 @@ class WebScrappingCompany:
     def buildUrl(self,v):
         url = ""
         fullUrl ={}
-        if v == WebSite.INFOCIF.value:
+        '''if v == WebSite.INFOCIF.value:
             url = self.URLINFOCIF + self.URLINFOCIFSRCH
             fullUrl['url'] = url
             fullUrl['type'] = 'd'
@@ -127,69 +127,70 @@ class WebScrappingCompany:
             fullUrl['type'] = 'd'
             fullUrl['src'] = v
             fullUrl['params'] = {'gateway_id':'ESP_0000', 'q':'' }
-    
-        elif v == WebSite.EMPRESITE.value:
+        '''
+        if v == WebSite.EMPRESITE.value:
             url = self.URLEMPRESITE + self.URLEMPRESITESRCH
             fullUrl['url'] = url
             fullUrl['type'] = 's'
             fullUrl['src'] = v
             fullUrl['params'] = {'pathSearch': '' }
-        elif v == WebSite.GOOGLE.value:
+        '''elif v == WebSite.GOOGLE.value:
             url = self.URLGOOGLE + self.URLEMPRESITESRCH
             fullUrl['url'] = url
             fullUrl['type'] = 'd'
             fullUrl['src'] = v
             fullUrl['params'] = {'q': '' }
-            
+            '''
         return fullUrl
     
     #Método que obtiene la lista de links arrojados por una busqueda, dependiendo de la página
     def getListLinks(self, txtHtml,srcWeb = 0):
         rL = []
-        if srcWeb == WebSite.INFOCIF.value:
+        '''if srcWeb == WebSite.INFOCIF.value:
             rL = txtHtml.xpath('//ul[contains(@class, "ulcargos")]/li/a')
         elif srcWeb == WebSite.GUIAEMPRESAS.value:
             rL = txtHtml.xpath('//table[contains(@class, "ranking_einf")]/tbody/tr/td/a')
         elif srcWeb == WebSite.AXESOR.value:
             rL = txtHtml.xpath('//table[contains(@id, "tablaEmpresas")]/tbody/tr/td/a')
         elif srcWeb == WebSite.INFOEMPRESA.value:
-            rL = txtHtml.xpath('//ul[contains(@class, "search-list")]/li/a')
-        elif srcWeb == WebSite.EMPRESITE.value:  
+            rL = txtHtml.xpath('//ul[contains(@class, "search-list")]/li/a')'''
+        if srcWeb == WebSite.EMPRESITE.value:  
             rL = txtHtml.xpath('//ol/li[contains(@class, "resultado_pagina")]/article/div/div/div/a')
-        elif srcWeb == WebSite.GOOGLE.value:
-            rL = txtHtml.xpath('//div[contains(@class, "rc")]/div/a')
+        '''elif srcWeb == WebSite.GOOGLE.value:
+            rL = txtHtml.xpath('//div[contains(@class, "rc")]/div/a')'''
         return rL
     
     #Método que obtiene los contenedores del detalle de la información de las empresas dependiendo de la pagina
     def getOutputsContainer(self, webSrc, txtHtml):
         r = None
-        if webSrc == WebSite.INFOCIF.value:
+        '''if webSrc == WebSite.INFOCIF.value:
             r = txtHtml.xpath('//div[contains(@id, "fe-informacion-izq")]')
         elif webSrc == WebSite.GUIAEMPRESAS.value:
             r = txtHtml.xpath('//div[contains(@id,"ficha_iden")]')
         elif webSrc == WebSite.AXESOR.value:
             r = txtHtml.xpath('//table[contains(@id, "tablaInformacionGeneral")]')
         elif webSrc == WebSite.INFOEMPRESA.value:
-            r = txtHtml.xpath('//div[contains(@id, "company-data")]')
-        elif webSrc == WebSite.EMPRESITE.value:
+            r = txtHtml.xpath('//div[contains(@id, "company-data")]')'''
+        if webSrc == WebSite.EMPRESITE.value:
             r = txtHtml.xpath('//section[contains(@id, "datos-externos1")]')
         return r
 
     #Método que obtiene el matchratio de las cadenas encontradas en la lista de resultados dependiendo del parametro de cada pagina
     def getMatchRatioFromStr(self, srcWeb, params, link):
         matchRatioStr = 0.0
-        if srcWeb == WebSite.INFOCIF.value:
+        '''if srcWeb == WebSite.INFOCIF.value:
             matchRatioStr = SequenceMatcher(None, params['Buscar'], link.text_content()).real_quick_ratio()
         elif srcWeb == WebSite.GUIAEMPRESAS.value:
             matchRatioStr = SequenceMatcher(None, params['pathSearch'], link.text_content()).real_quick_ratio()
         elif srcWeb == WebSite.AXESOR.value:
             matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()
         elif srcWeb == WebSite.INFOEMPRESA.value:
-            matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()
-        elif srcWeb == WebSite.EMPRESITE.value:
+            matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()'''
+        if srcWeb == WebSite.EMPRESITE.value:
             matchRatioStr = SequenceMatcher(None, str(params['pathSearch']).replace('/',''), link.text_content()).ratio()
-        elif srcWeb == WebSite.GOOGLE.value:
-            matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()
+            print('#191 Match Ratio: ', matchRatioStr)
+        '''elif srcWeb == WebSite.GOOGLE.value:
+            matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()'''
         return matchRatioStr
 
     def getOutputDataFromHtml_Google(self, field, Selector, url, item):
@@ -359,7 +360,7 @@ class WebScrappingCompany:
         parser = html.fromstring(response.text)
         proxies = set()
         for i in parser.xpath('//tbody/tr')[:10]:
-            if i.xpath('.//td[7][contains(text(),"yes")]'):
+            if i.xpath('//td[7][contains(text(),"yes")]'):
                 proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
                 proxies.add(proxy)
         return proxies
@@ -367,7 +368,7 @@ class WebScrappingCompany:
     def getOutputDataFromHtml(self, typeO, field, webSrc):
         oData = []
         if typeO == "Label" :
-            if webSrc == WebSite.INFOCIF.value:
+            '''if webSrc == WebSite.INFOCIF.value:
                 #oData = field.xpath('//strong[contains(@class, "fwb")]/text()')
                 count = field.xpath('count(//strong[contains(@class, "fwb")])')
                 print("250 count Labels", count)
@@ -454,8 +455,8 @@ class WebScrappingCompany:
                     if "empleados" in strEmpVta:
                         oData.append('Empleados')
                     if "facturacion" in strEmpVta:
-                        oData.append('Facturacion')
-            elif webSrc == WebSite.EMPRESITE.value:
+                        oData.append('Facturacion')'''
+            if webSrc == WebSite.EMPRESITE.value:
                 #oData = field.xpath('//ul[contains(@class, "list06")]/li/strong/text()')
                 count = field.xpath('count(//section[contains(@id, "datos-einforma")]/ul/li)')
                 if int(count) == 0:
@@ -475,284 +476,54 @@ class WebScrappingCompany:
                     print(tditem)
                     oData.append(tditem[0])
         else:
-            try:
-                if webSrc == WebSite.INFOCIF.value:
-                    WebEmpty = False
-                    count = field.xpath('count(//div[@id="fe-informacion-izq"]/p)')
-                    print("348 Count Data", count)
-                    xpathCIF = '//h2[contains(@class, "editable")]/text()'
-                    if field.xpath(xpathCIF) != []:
-                        oData.append(field.xpath(xpathCIF)[0])
-                    for i in range(1,int(count)+1):
-                        xpath = '//div[@id="fe-informacion-izq"]/p[%d]/text()' % i
-                        xpathLnk = '//div[@id="fe-informacion-izq"]/p[%d]/a/text()' % i
-                        
-                        if i <= 5:
-                            if field.xpath(xpath) != [] and i < 5:
-                                valor = self.cleanStringData(field.xpath(xpath)[0],StringType.AlfaNumerico)
-                                print('358 ',self.cleanStringData(field.xpath(xpath)[0],StringType.AlfaNumerico))
-                                tditem = valor
-                                print(xpath)
-                                if i == 5:
-                                    print(field.xpath(xpath))
-                                else:
-                                    print(tditem)
-                            elif field.xpath(xpathLnk) != [] :                                
-                                tditem = str(str(field.xpath(xpathLnk)[0]).replace('No facilitada','')).strip()
-                                if 'REGISTRO' in tditem.upper():
-                                    WebEmpty = True
-                                print('#539 ',xpathLnk)
-                                print('#540 ',tditem)                            
-                        
-                        else:
-                            xpathAux = '//div[@id="fe-informacion-izq"]/p[%d]/text()' % (i-5)
-                            print('548 ', field.xpath(xpathAux))
-                            if field.xpath(xpathAux) != []:
-                                valorXpthAux = self.cleanStringData(field.xpath(xpathAux)[1],StringType.AlfaNumerico)
-                                print('550 '+ field.xpath(xpathAux)[1],self.cleanStringData(field.xpath(xpathAux)[1],StringType.AlfaNumerico))
-                                #indexP = 'p[2]' if 'REGISTRO' in field.xpath('//div[@id="fe-informacion-izq"]/p[5]/a/text()')[0] else 'p[3]'
-                                if 'p[3]' in xpathAux:
-                                    valorLabel = field.xpath('//*[@id="fe-informacion-izq"]/strong[3]/text()')[1]
-                                    print('554 ', valorLabel)
-                                    if '-' in valorLabel:                          
-                                        start = valorLabel.find('-')+2
-                                        print('557 Cargo:',valorLabel[start:len(valorLabel)])
-                                        oData.append(str(valorLabel[start:len(valorLabel)]).upper().replace(':','').replace('ADM.','ADMINISTRADOR'))
-                                        tditem = valorXpthAux if valorXpthAux != '' else field.xpath('//div[@id="fe-informacion-izq"]/p[3]/text()')[3]
-                                else:
-                                    tditem = valorXpthAux
-                                print('563 ', xpathAux)
-                                print(tditem)
-                        oData.append(tditem.upper())
-                        if WebEmpty == True:
-                            oData.append('')
-                            WebEmpty = False
-                            count = count -1
-                elif webSrc == WebSite.GUIAEMPRESAS.value:
-                    #oData = field.xpath('//td[contains(@class, "td_ficha_univ")]/text()')
-                    count = field.xpath('count(//td[contains(@class, "td_ficha_univ")])')
-                    print('Count Data', count)
-                    #oData = field.xpath('//td[contains(@class, "td_ficha_univ")]/text()')
-                    for i in range(1,int(count)):
-                        xpath = '//tr[%d]/td[@class="td_ficha_univ"]/text()' % i
-                        xpaths = '//tr[%d]/td[@class="td_ficha_univ"]/span/text()' % i
-                        xpathb = '//tr[%d]/td[@class="td_ficha_univ"]/button/text()' % i
-                        xpathEmp = '//p[@id="bloque-empleados"]/text()'
-                        xpathVta = '//p[@id="bloque-ventas"]/text()'
+            #try:    
+            if webSrc == WebSite.EMPRESITE.value:
+                #oData = field.xpath('//ul[contains(@class, "list06")]/li/span/text()')
+                count = field.xpath('count(//section[contains(@id, "datos-einforma")]/ul/li)')
+                if int(count) == 0:
+                    count = field.xpath('count(//section[contains(@id, "datos-externos1")]/ul/li)')
+                print('Count Data', count)
+                for i in range(1, int(count)+1):
+                    tditem = []
+                    
+                    xpath = '//li[%d]/div/span/text()' % i
+                    xpath2 = '//li[%d]/div/text()' % i
+                    xpath3 = '//li[%d]/span/text()' % i
+                    xpathDivs = '//li[%d]/span/div' % i
+                    xpathMail = '//li[%d]/a/span/text()' % i
+                    xpathWeb = '//li[%d]/span/a/text()' % i
+                    xpathForma = '//li[%d]/text()' % i
+                    cntDivs = field.xpath('count(//li[%d]/span/div)' % i)
+                    if (int(cntDivs) > 0):
+                        if field.xpath(xpathDivs) != []:
+                            strDivs = ''
+                            for div in field.xpath(xpathDivs):
+                                strDivs += div.xpath('text()')[0] 
+                            tditem.append(str(strDivs).replace(',', ', '))
+                    else:
                         if field.xpath(xpath) != []:
                             tditem = field.xpath(xpath)
-                        elif field.xpath(xpaths) != []:
-                            tditem = field.xpath(xpaths)
-                        elif field.xpath(xpathb) != []:
-                            if 'empleados' in str(field.xpath(xpathb)[0]) and field.xpath(xpathEmp) != []:
-                                tditem = field.xpath(xpathEmp)
-                            elif 'ventas' in str(field.xpath(xpathb)[0]) and field.xpath(xpathVta) != []:
-                                tditem = field.xpath(xpathVta)
+                        elif field.xpath(xpath2) != []:
+                            tditem = field.xpath(xpath2)
+                        elif field.xpath(xpath3) != []:
+                            tditem = field.xpath(xpath3)
+                        elif field.xpath(xpathMail) != []:
+                            tditem = field.xpath(xpathMail)
+                        elif field.xpath(xpathWeb) != []:
+                            tditem = field.xpath(xpathWeb)
+                        elif field.xpath(xpathForma) != []:
+                            print('#746 ', field.xpath(xpathForma), i)
+                            if len(str(field.xpath(xpathForma)[0])) > 9 and str(field.xpath(xpathForma)[0])[7] == '-':
+                                tditem = field.xpath(xpathForma)[0]
+                                tditem = [tditem[9: len(tditem)]]
                             else:
-                                tditem = field.xpath(xpathb)
-                        oData.append(tditem[len(tditem)-1] if len(tditem)>1 else tditem[0])
-                elif webSrc == WebSite.AXESOR.value:
-                    #oData = field.xpath('//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr/td[2]/text()')
-                    count = field.xpath('count(//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr)')
-                    xpathEmpVta = '//div[@id="resumen_general"]/p[2]/text()'
-                    print('Count Data', count)
-                    for i in range(1,int(count)):
-                        xpath = '//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr[%d]/td[2]/text()' % i
-                        xpathH3 = '//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr[%d]/td[2]/h3/text()' % i
-                        xpaths = '//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr[%d]/td[2]/span/text()' % i
-                        xpaths2 = '//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr[%d]/td[2]/span/span' % i
-                        cntSpans = field.xpath('count(//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr[%d]/td[2]/span/span)' % i)
-
-                        if (int(cntSpans) > 0):
-                            if field.xpath(xpaths2) != []:
-                                strSpan = ''
-                                for span in field.xpath(xpaths2):                                
-                                    strSpan += span.xpath('text()')[0]                                
-                                tditem[0] = str(strSpan).replace(',', ', ')
+                                tditem = field.xpath(xpathForma)
                         else:
-                            if field.xpath(xpath) != []:
-                                tditem = field.xpath(xpath)
-                            elif field.xpath(xpathH3) != []:
-                                tditem = field.xpath(xpathH3)
-                            elif field.xpath(xpaths) != []:                        
-                                if len(field.xpath(xpaths)) > 1:
-                                    tditem[0]= ''.join([str(elem).strip() for elem in field.xpath(xpaths)])
-                                else:
-                                    tditem = field.xpath(xpaths)
-                            else:
-                                tditem =['']
-                        oData.append(str(str(tditem[0]).strip('\xa0')).strip())
-                    if field.xpath(xpathEmpVta) != []:
-                        strEmp = field.xpath(xpathEmpVta)[0]
-                        if "empleados" in strEmp:
-                            start = strEmp.find('empleados') + 13
-                            end = strEmp.find('importe') -6
-                            print("333 ", strEmp[start:end])
-                            oData.append(strEmp[start:end] if start != -1 else '') 
-                        if "ventas de entre" in strEmp:
-                            start = strEmp.find('ventas') + 10
-                            end = strEmp.find('€.') + 1
-                            print("342 ", strEmp[start:end])
-                            oData.append(strEmp[start:end] if start != -1 else '') 
-                        elif "ventas de más de" in strEmp:
-                            start = strEmp.find('ventas') + 10
-                            end = strEmp.find('€.') + 1 
-                            print("347 ", strEmp[start:end])
-                            oData.append(strEmp[start:end] if start != -1 else '')  
-                        else:
-                            oData.append('') 
-                elif webSrc == WebSite.INFOEMPRESA.value:
-                    EmpVtaExist = False
-                    count = field.xpath('count(//ul[contains(@class, "list-company-data")]/li)')
-                    xpathEmpVta = '//div[@id="tab-more-info"]/div/div[1]/p[3]/text()'
-                    xpathEmpVta2 = '//div[@id="tab-more-info"]/div/div[1]/p[2]/text()'
-                    print('#671 Count Data', count)
-                    for i in range(1,int(count)):
-                        tditem = []
-                        xpath = '//li[%d]/span[2]/text()' % i
-                        xpath2 = '//li[%d]/span[1]/text()' % i
-                        xpathNif = '//li[%d]/span[2]/text()' % i
-                        xpathPs = '//li[%d]/p/span/text()' % i
-                        xpathPsS = '//li[%d]/span[2]/span/text()' % i
-                        if i == 1:
-                            print('679 ' , field.xpath(xpathNif))
-                            if field.xpath(xpathNif) != []:
-                                strTitle = str(field.xpath(xpathNif)[0]).split(':')
-                                tditem.append(str(strTitle[1]).strip())
-                        elif i == 2:
-                            if field.xpath(xpathPsS) != []:
-                                strTitle = field.xpath(xpathPsS)
-                                tditem.append(str(strTitle[0]).upper().replace('NO DISPONIBLE',''))
-                            elif field.xpath(xpath) != []:
-                                strTitle = field.xpath(xpath)
-                                tditem.append(strTitle[0])
-                        elif i == 3:
-                            if field.xpath(xpathPsS) != []:
-                                strTitle = field.xpath(xpathPsS)
-                                tditem.append(str(strTitle[0]).upper().replace('NO DISPONIBLE',''))
-                            elif field.xpath(xpath) != []:
-                                strTitle = field.xpath(xpath)
-                                tditem.append(str(strTitle[0]).replace('Ã³','o'))
-                        elif i == 4:
-                            strTitle = field.xpath(xpathPs)
-                            tditem.append(str(strTitle[0]).replace('\n','').replace('Ã§','c').replace('Ã±','ni'))
-                        else:
-                            if field.xpath(xpath2) != []:                               
-                                strTitle = str(field.xpath(xpath2)[0]).split(':') if len(str(field.xpath(xpath2)[0]).split(':')) > 1 else field.xpath(xpath2)
-                                if len(strTitle[1]) > 9 :
-                                    tditem.append(str(strTitle[1])[-9:len(strTitle[1])])
-                                else:
-                                    tditem.append(strTitle[1])
-                            elif field.xpath(xpathPs) != []:
-                                strTitle = str(field.xpath(xpathPs)[0]).split(':')
-                                tditem.append(strTitle[0])
-                        #print(tditem)
-                        oData.append(tditem[0])
-                    if field.xpath(xpathEmpVta) != []:
-                        strEmp = field.xpath(xpathEmpVta)[0]
-                        strEmp = strEmp.replace('Ã³','o')
-                        if "empleados" in strEmp:
-                            if "cuenta con entre" in strEmp:
-                                start = strEmp.find('cuenta con') + 10
-                                end = strEmp.find('empleados')
-                                oData.append(strEmp[start:end] if start != -1 else '')   
-                            elif "cuenta con más" in strEmp:
-                                start = strEmp.find('cuenta con') + 10
-                                end = strEmp.find('empleados')
-                                oData.append(strEmp[start:end] if start != -1 else '')
-                            else:
-                                oData.append('')
-                        if "facturacion anual de entre" in strEmp:
-                            EmpVtaExist = True
-                            start = strEmp.find('facturacion anual de entre') + 21
-                            end = strEmp.find('euros.')
-                            oData.append(strEmp[start:end] + "€" if start != -1 else '')
-                        elif "facturacion anual de más" in strEmp:
-                            EmpVtaExist = True
-                            start = strEmp.find('facturacion anual de más') + 20
-                            end = strEmp.find('euros.')
-                            oData.append(strEmp[start:end] + "€" if start != -1 else '')
-                        elif "facturacion anual de menos" in strEmp:
-                            EmpVtaExist = True
-                            start = strEmp.find('facturacion anual de menos') + 20
-                            end = strEmp.find('euros.')
-                            oData.append(strEmp[start:end] + "€" if start != -1 else '')
-                        else:
-                            oData.append('')
-                    if EmpVtaExist == False and field.xpath(xpathEmpVta2) != []:
-                        strEmp = field.xpath(xpathEmpVta2)[0]
-                        strEmp = strEmp.replace('Ã³','o')
-                        if "empleados" in strEmp:
-                            if "cuenta con entre" in strEmp:
-                                start = strEmp.find('cuenta con') + 10
-                                end = strEmp.find('empleados')
-                                oData.append(strEmp[start:end] if start != -1 else '')   
-                            elif "cuenta con más" in strEmp:
-                                start = strEmp.find('cuenta con') + 10
-                                end = strEmp.find('empleados')
-                                oData.append(strEmp[start:end] if start != -1 else '')
-                            else:
-                                oData.append('')
-                        if "facturación anual de entre" in strEmp :
-                            start = strEmp.find('facturación anual de entre') + 21
-                            end = strEmp.find('euros.')
-                            oData.append(strEmp[start:end] + "€" if start != -1 else '')
-                        elif "facturación anual de más" in strEmp :
-                            start = strEmp.find('facturación anual de más') + 20
-                            end = strEmp.find('euros.')
-                            oData.append(strEmp[start:end] + "€" if start != -1 else '')
-                        elif "facturacion anual de menos" in strEmp:
-                            start = strEmp.find('facturacion anual de menos') + 20
-                            end = strEmp.find('euros.')
-                            oData.append(strEmp[start:end] + "€" if start != -1 else '')
-                        else:
-                            oData.append('')
-                elif webSrc == WebSite.EMPRESITE.value:
-                    count = field.xpath('count(//section[contains(@id, "datos-einforma")]/ul/li)')
-                    if int(count) == 0:
-                        count = field.xpath('count(//section[contains(@id, "datos-externos1")]/ul/li)')
-                    print('Count Data', count)
-                    for i in range(1, int(count)+1):
-                        tditem = []
-                        
-                        xpath = '//li[%d]/div/span/text()' % i
-                        xpath2 = '//li[%d]/div/text()' % i
-                        xpath3 = '//li[%d]/span/text()' % i
-                        xpathDivs = '//li[%d]/span/div' % i
-                        xpathMail = '//li[%d]/a/span/text()' % i
-                        xpathWeb = '//li[%d]/span/a/text()' % i
-                        xpathForma = '//li[%d]/text()' % i
-                        cntDivs = field.xpath('count(//li[%d]/span/div)' % i)
-                        if (int(cntDivs) > 0):
-                            if field.xpath(xpathDivs) != []:
-                                strDivs = ''
-                                for div in field.xpath(xpathDivs):
-                                    strDivs += div.xpath('text()')[0] 
-                                tditem.append(str(strDivs).replace(',', ', '))
-                        else:
-                            if field.xpath(xpath) != []:
-                                tditem = field.xpath(xpath)
-                            elif field.xpath(xpath2) != []:
-                                tditem = field.xpath(xpath2)
-                            elif field.xpath(xpath3) != []:
-                                tditem = field.xpath(xpath3)
-                            elif field.xpath(xpathMail) != []:
-                                tditem = field.xpath(xpathMail)
-                            elif field.xpath(xpathWeb) != []:
-                                tditem = field.xpath(xpathWeb)
-                            elif field.xpath(xpathForma) != []:
-                                print('#746 ', field.xpath(xpathForma), i)
-                                if len(str(field.xpath(xpathForma)[0])) > 9 and str(field.xpath(xpathForma)[0])[7] == '-':
-                                    tditem = field.xpath(xpathForma)[0]
-                                    tditem = [tditem[9: len(tditem)]]
-                                else:
-                                    tditem = field.xpath(xpathForma)
-                            else:
-                                tditem = ['']
-                        print('#752 ',tditem)
-                        oData.append(str(tditem[0]).strip(': '))
-            except:
-                oData.append('')
+                            tditem = ['']
+                    print('#754 ',tditem)
+                    oData.append(str(tditem[0]).strip(': '))
+            #except:
+                #oData.append('')
         return oData
 
     def cleanStringData(self,texto, typeString):
@@ -839,7 +610,7 @@ class WebScrappingCompany:
                     IsGOOGLE = False
                     NoEntrar = True
                     if fullUrl['type'] == 'd':
-                        if fullUrl['src'] == WebSite.INFOCIF.value:
+                        '''if fullUrl['src'] == WebSite.INFOCIF.value:
                             params = fullUrl['params']
                             params['Buscar'] = item
                         elif fullUrl['src'] == WebSite.AXESOR.value:
@@ -847,13 +618,13 @@ class WebScrappingCompany:
                             params['q'] = item
                         elif fullUrl['src'] == WebSite.INFOEMPRESA.value:
                             params = fullUrl['params']
-                            params['q'] = item
+                            params['q'] = item'''
                     #if fullUrl['src'] == WebSite.GOOGLE.value:
-                        elif fullUrl['src'] == WebSite.GOOGLE.value:
+                        '''elif fullUrl['src'] == WebSite.GOOGLE.value:
                             params = fullUrl['params']
                             params['q'] = item
                             IsGOOGLE = True
-                            NoEntrar = False
+                            NoEntrar = False'''
                     else:
                         params = fullUrl['params']
                         params['pathSearch'] = str(item).replace(u' ',u'-') + '/'
@@ -866,12 +637,13 @@ class WebScrappingCompany:
                             page = None
                             if fullUrl['type'] == 'd':
                                 #page = requests.get(url, params=params, proxies=self.proxies, timeout=5)
-                                page = requests.get(url, params=params,timeout=5)
+                                page = requests.get(url, params=params,proxies=self.proxies,timeout=5)
                             else:
-                                print(url+params['pathSearch'])
+                                print('#864 ',url+params['pathSearch'])
                                 #page = requests.get(url+params['pathSearch'], proxies=proxies, timeout=5)
                                 page = requests.get(url+params['pathSearch'], timeout=5)
                             page.encoding = 'ISO-8859-1'
+                            print(page.status_code)
                             if page.status_code == 200 :
                                 txtHtml = html.fromstring(page.content)
                                 #print(txtHtml.xpath('//div[@id="generic-msg-status"]/text()'))
@@ -892,12 +664,12 @@ class WebScrappingCompany:
                                         indexList = 0
                                         indexiter = 0
                                         for link in resultLinks:
-                                            print(link.attrib['href'], link.text_content())
+                                            print('#890 ',link.attrib['href'], link.text_content())
                                             strMatchVal = self.getMatchRatioFromStr(fullUrl['src'],params,link)
                                             if ratioMatch <= strMatchVal:
                                                 ratioMatch = strMatchVal
                                                 indexList = indexiter
-                                                print('# 470 Indice de lista de resultados: ', indexList)
+                                                print('#895 Indice de lista de resultados: ', indexList, link.text_content(), params)
                                                 pageCompany = self.cleanUrl(resultLinks[indexList].attrib['href'],fullUrl['src'])
                                             indexiter = indexiter+1
                                         print('# 474 ',pageCompany)
@@ -1020,7 +792,7 @@ class WebScrappingCompany:
         #proxy_pool = cycle(proxies)
         #proxy = next(proxy_pool)
         #pageDetail = requests.get(pageCompany,proxies=proxies=self.proxies)
-        pageDetail = requests.get(pageCompany)
+        pageDetail = requests.get(pageCompany,proxies=self.proxies)
         pageDetail.encoding = 'ISO-8859-1'
         if pageDetail.status_code == 200 :
             txtHtml = html.fromstring(pageDetail.text)
@@ -1076,12 +848,12 @@ class WebScrappingCompany:
                         company[headersCsv[5]]['fuente'] = pageCompany if company[headersCsv[5]]['valor'] != '' else ''
                     if self.Labels['Industry'][WebSite.getWebsiteName(fullUrl['src'])] in e and (company[headersCsv[6]]['valor'] == '' or company[headersCsv[6]]['fuente'] == ''):
                         self.FoundData == True
-                        if WebSite.getWebsiteName(fullUrl['src']) == WebSite.GUIAEMPRESAS.name:
+                        '''if WebSite.getWebsiteName(fullUrl['src']) == WebSite.GUIAEMPRESAS.name:
                             company[headersCsv[6]]['valor'] = self.cleanStringData(str(datos[i])[7:len(datos[i])] if len(datos[i]) > 0 else datos[0], StringType.AlfaNumericoExt).upper() if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
                             company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
-                        else:
-                            company[headersCsv[6]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumericoExt).upper() if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
-                            company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
+                        else:'''
+                        company[headersCsv[6]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumericoExt).upper() if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
+                        company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
                     if self.Labels['Contacts'][WebSite.getWebsiteName(fullUrl['src'])] in e and (company[headersCsv[7]]['valor'] == '' or company[headersCsv[7]]['fuente'] == ''):
                         self.FoundData == True
                         company[headersCsv[7]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumerico).upper() if company[headersCsv[7]]['valor'] == '' else self.cleanStringData(company[headersCsv[7]]['valor'],StringType.AlfaNumerico).upper()
@@ -1107,15 +879,15 @@ class WebScrappingCompany:
         return company
 
     def cleanUrl(self, url, srcWeb):
-        if srcWeb == WebSite.INFOCIF.value:
+        '''if srcWeb == WebSite.INFOCIF.value:
             url = 'http://' + str(url).strip('http://')
         elif srcWeb == WebSite.AXESOR.value:
             url = 'http://' + str(url).strip('//')
         elif srcWeb == WebSite.GUIAEMPRESAS.value:
             url = self.URLGUIAEMPRESAS + url
         elif srcWeb == WebSite.INFOEMPRESA.value:
-            url = self.URLINFOEMPRESAS + str(url).replace('/es-es/es/','')
-        elif srcWeb == WebSite.EMPRESITE.value:
+            url = self.URLINFOEMPRESAS + str(url).replace('/es-es/es/','')'''
+        if srcWeb == WebSite.EMPRESITE.value:
             url = url
         
         return url
@@ -1143,12 +915,12 @@ class WebScrappingCompany:
             print(i)
 
 class WebSite(Enum):
-    GUIAEMPRESAS = 1
+    '''GUIAEMPRESAS = 1
     INFOCIF = 2
     INFOEMPRESA = 3
-    AXESOR = 4
+    AXESOR = 4'''
     EMPRESITE = 5
-    GOOGLE = 6
+    '''GOOGLE = 6'''
     '''INFOCIF = 1
     AXESOR = 2
     GUIAEMPRESAS = 3

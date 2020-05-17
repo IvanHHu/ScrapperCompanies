@@ -1,4 +1,5 @@
 from enum import Enum
+from difflib import SequenceMatcher
 import re
 class Tests:
     def main(self):
@@ -6,9 +7,13 @@ class Tests:
         #string = 'Jmontero@Ns- Group.Com; Web Www.Nutri'
         #string = self.cleanStringData(string, StringType.Email)
         #self.getType([])
-        html_text = ' de una empresa>como saber cuánto factura una empresa argentina>datos de facturación de una empresa>como saber cuanto factura mi competencia>sociedad limitada: características>  siguiente >  iniciar sesiónpreferenciasprivacidadcondicione '
+        
+        print(SequenceMatcher(None, '216-INNOVA-SL', 'https://empresite.eleconomista.es/216INNOVA24H.html').get_close_matches())
+        print(SequenceMatcher(None, '216-INNOVA-SL', 'https://empresite.eleconomista.es/RAMOZA-216.html').get_close_matches())
+        
+        '''html_text = ' de una empresa>como saber cuánto factura una empresa argentina>datos de facturación de una empresa>como saber cuanto factura mi competencia>sociedad limitada: características>  siguiente >  iniciar sesiónpreferenciasprivacidadcondicione '
         print(html_text)
-        print()
+        print()'''
         #EMpleados
         '''start = html_text.find('cuenta con entre')
         html_text_tmp = html_text[start: len(html_text)]
@@ -24,7 +29,7 @@ class Tests:
         print(dato)'''
 
         #FACTURACION
-        start = html_text.find('facturación anual')
+        '''start = html_text.find('facturación anual')
         if start != -1:
             html_text_tmp = html_text[start: len(html_text)]
             end = html_text_tmp.find('euros')
@@ -33,7 +38,7 @@ class Tests:
             print(dato)
         else:
             dato = ''
-        
+        '''
         #CNAE
         '''start = html_text.find('cnae 2009')
         end = 0
