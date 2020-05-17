@@ -102,19 +102,19 @@ class WebScrappingCompany:
     def buildUrl(self,v):
         url = ""
         fullUrl ={}
-        if v == WebSite.INFOCIF.value:
+        '''if v == WebSite.INFOCIF.value:
             url = self.URLINFOCIF + self.URLINFOCIFSRCH
             fullUrl['url'] = url
             fullUrl['type'] = 'd'
             fullUrl['src'] = v
-            fullUrl['params'] = {'Buscar': '' }
-        elif v == WebSite.AXESOR.value:
+            fullUrl['params'] = {'Buscar': '' }'''
+        if v == WebSite.AXESOR.value:
             url = self.URLAXESOR + self.URLAXESORSRCH
             fullUrl['url'] = url
             fullUrl['type'] = 'd'
             fullUrl['src'] = v
             fullUrl['params'] = {'tabActivo':'empresas', 'q':'' }
-        elif v == WebSite.GUIAEMPRESAS.value:
+        '''elif v == WebSite.GUIAEMPRESAS.value:
             url = self.URLGUIAEMPRESAS + self.URLGUIAEMPRESASSRCH
             fullUrl['url'] = url
             fullUrl['type'] = 's'
@@ -139,57 +139,57 @@ class WebScrappingCompany:
             fullUrl['url'] = url
             fullUrl['type'] = 'd'
             fullUrl['src'] = v
-            fullUrl['params'] = {'q': '' }
+            fullUrl['params'] = {'q': '' }'''
             
         return fullUrl
     
     #Método que obtiene la lista de links arrojados por una busqueda, dependiendo de la página
     def getListLinks(self, txtHtml,srcWeb = 0):
         rL = []
-        if srcWeb == WebSite.INFOCIF.value:
+        '''if srcWeb == WebSite.INFOCIF.value:
             rL = txtHtml.xpath('//ul[contains(@class, "ulcargos")]/li/a')
         elif srcWeb == WebSite.GUIAEMPRESAS.value:
-            rL = txtHtml.xpath('//table[contains(@class, "ranking_einf")]/tbody/tr/td/a')
-        elif srcWeb == WebSite.AXESOR.value:
+            rL = txtHtml.xpath('//table[contains(@class, "ranking_einf")]/tbody/tr/td/a')'''
+        if srcWeb == WebSite.AXESOR.value:
             rL = txtHtml.xpath('//table[contains(@id, "tablaEmpresas")]/tbody/tr/td/a')
-        elif srcWeb == WebSite.INFOEMPRESA.value:
+        '''elif srcWeb == WebSite.INFOEMPRESA.value:
             rL = txtHtml.xpath('//ul[contains(@class, "search-list")]/li/a')
         elif srcWeb == WebSite.EMPRESITE.value:  
             rL = txtHtml.xpath('//ol/li[contains(@class, "resultado_pagina")]/article/div/div/div/a')
         elif srcWeb == WebSite.GOOGLE.value:
-            rL = txtHtml.xpath('//div[contains(@class, "rc")]/div/a')
+            rL = txtHtml.xpath('//div[contains(@class, "rc")]/div/a')'''
         return rL
     
     #Método que obtiene los contenedores del detalle de la información de las empresas dependiendo de la pagina
     def getOutputsContainer(self, webSrc, txtHtml):
         r = None
-        if webSrc == WebSite.INFOCIF.value:
+        '''if webSrc == WebSite.INFOCIF.value:
             r = txtHtml.xpath('//div[contains(@id, "fe-informacion-izq")]')
         elif webSrc == WebSite.GUIAEMPRESAS.value:
-            r = txtHtml.xpath('//div[contains(@id,"ficha_iden")]')
-        elif webSrc == WebSite.AXESOR.value:
+            r = txtHtml.xpath('//div[contains(@id,"ficha_iden")]')'''
+        if webSrc == WebSite.AXESOR.value:
             r = txtHtml.xpath('//table[contains(@id, "tablaInformacionGeneral")]')
-        elif webSrc == WebSite.INFOEMPRESA.value:
+        '''elif webSrc == WebSite.INFOEMPRESA.value:
             r = txtHtml.xpath('//div[contains(@id, "company-data")]')
         elif webSrc == WebSite.EMPRESITE.value:
-            r = txtHtml.xpath('//section[contains(@id, "datos-externos1")]')
+            r = txtHtml.xpath('//section[contains(@id, "datos-externos1")]')'''
         return r
 
     #Método que obtiene el matchratio de las cadenas encontradas en la lista de resultados dependiendo del parametro de cada pagina
     def getMatchRatioFromStr(self, srcWeb, params, link):
         matchRatioStr = 0.0
-        if srcWeb == WebSite.INFOCIF.value:
+        '''if srcWeb == WebSite.INFOCIF.value:
             matchRatioStr = SequenceMatcher(None, params['Buscar'], link.text_content()).real_quick_ratio()
         elif srcWeb == WebSite.GUIAEMPRESAS.value:
-            matchRatioStr = SequenceMatcher(None, params['pathSearch'], link.text_content()).real_quick_ratio()
-        elif srcWeb == WebSite.AXESOR.value:
+            matchRatioStr = SequenceMatcher(None, params['pathSearch'], link.text_content()).real_quick_ratio()'''
+        if srcWeb == WebSite.AXESOR.value:
             matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()
-        elif srcWeb == WebSite.INFOEMPRESA.value:
+        '''elif srcWeb == WebSite.INFOEMPRESA.value:
             matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()
         elif srcWeb == WebSite.EMPRESITE.value:
             matchRatioStr = SequenceMatcher(None, str(params['pathSearch']).replace('/',''), link.text_content()).ratio()
         elif srcWeb == WebSite.GOOGLE.value:
-            matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()
+            matchRatioStr = SequenceMatcher(None, params['q'], link.text_content()).real_quick_ratio()'''
         return matchRatioStr
 
     def getOutputDataFromHtml_Google(self, field, Selector, url, item):
@@ -199,7 +199,8 @@ class WebScrappingCompany:
             print ("Este el item " + item)
             params = {'q': str(field) + ' ' + item}
             page = requests.get(url, params=params, proxies=self.proxies, stream=True)
-            page.encoding = 'ISO-8859-1'
+            #page.encoding = 'ISO-8859-1'
+            page.encoding = 'UTF-8-SIG'
             url_2 = page.url
             if page.status_code == 200:
                 print(url_2)
@@ -223,7 +224,8 @@ class WebScrappingCompany:
             print("Aqui va la info")
             params = {'q': str(field) + ' "' + item + '"'}
             page = requests.get(url, params=params, stream=True)
-            page.encoding = 'ISO-8859-1'
+            #page.encoding = 'ISO-8859-1'
+            page.encoding = 'UTF-8-SIG'
             url_2 = page.url
             if page.status_code == 200:
                 print(url_2)
@@ -367,7 +369,7 @@ class WebScrappingCompany:
     def getOutputDataFromHtml(self, typeO, field, webSrc):
         oData = []
         if typeO == "Label" :
-            if webSrc == WebSite.INFOCIF.value:
+            '''if webSrc == WebSite.INFOCIF.value:
                 #oData = field.xpath('//strong[contains(@class, "fwb")]/text()')
                 count = field.xpath('count(//strong[contains(@class, "fwb")])')
                 print("250 count Labels", count)
@@ -393,8 +395,8 @@ class WebScrappingCompany:
                     else:
                         tditem = field.xpath(xpaths)
                     #print(tditem[0])
-                    oData.append(tditem[0])
-            elif webSrc == WebSite.AXESOR.value:
+                    oData.append(tditem[0])'''
+            if webSrc == WebSite.AXESOR.value:
                 #oData = field.xpath('//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr/th[1]/text()')
                 count = field.xpath('count(//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr)')
                 xpathEmpVta = '//div[@id="resumen_general"]/p[2]/text()'
@@ -410,7 +412,7 @@ class WebScrappingCompany:
                         oData.append('Empleados')
                     if "ventas" in field.xpath(xpathEmpVta)[0]:
                         oData.append('Facturacion')
-            elif webSrc == WebSite.INFOEMPRESA.value:     
+            '''elif webSrc == WebSite.INFOEMPRESA.value:     
                 EmpVtaExist = False
                 count = field.xpath('count(//ul[contains(@class, "list-company-data")]/li)')
                 xpathEmpVta = '//div[@id="tab-more-info"]/div/div[1]/p[3]/text()'
@@ -473,10 +475,10 @@ class WebScrappingCompany:
                     elif field.xpath(xpath2) != []:
                         tditem = field.xpath(xpath2)
                     print(tditem)
-                    oData.append(tditem[0])
+                    oData.append(tditem[0])'''
         else:
             try:
-                if webSrc == WebSite.INFOCIF.value:
+                '''if webSrc == WebSite.INFOCIF.value:
                     WebEmpty = False
                     count = field.xpath('count(//div[@id="fe-informacion-izq"]/p)')
                     print("348 Count Data", count)
@@ -550,8 +552,8 @@ class WebScrappingCompany:
                                 tditem = field.xpath(xpathVta)
                             else:
                                 tditem = field.xpath(xpathb)
-                        oData.append(tditem[len(tditem)-1] if len(tditem)>1 else tditem[0])
-                elif webSrc == WebSite.AXESOR.value:
+                        oData.append(tditem[len(tditem)-1] if len(tditem)>1 else tditem[0])'''
+                if webSrc == WebSite.AXESOR.value:
                     count = field.xpath('count(//table[contains(@id,"tablaInformacionGeneral")]/tbody/tr)')
                     xpathEmpVta = '//div[@id="resumen_general"]/p[2]/text()'
                     print('Count Data', count)
@@ -597,7 +599,7 @@ class WebScrappingCompany:
                             oData.append(strEmp[start:end] if start != -1 else '')  
                         else:
                             oData.append('') 
-                elif webSrc == WebSite.INFOEMPRESA.value:
+                '''elif webSrc == WebSite.INFOEMPRESA.value:
                     EmpVtaExist = False
                     count = field.xpath('count(//ul[contains(@class, "list-company-data")]/li)')
                     xpathEmpVta = '//div[@id="tab-more-info"]/div/div[1]/p[3]/text()'
@@ -746,7 +748,7 @@ class WebScrappingCompany:
                             else:
                                 tditem = ['']
                         print('#752 ',tditem)
-                        oData.append(str(tditem[0]).strip(': '))
+                        oData.append(str(tditem[0]).strip(': '))'''
             except:
                 oData.append('')
         return oData
@@ -835,13 +837,13 @@ class WebScrappingCompany:
                     IsGOOGLE = False
                     NoEntrar = True
                     if fullUrl['type'] == 'd':
-                        if fullUrl['src'] == WebSite.INFOCIF.value:
+                        '''if fullUrl['src'] == WebSite.INFOCIF.value:
                             params = fullUrl['params']
-                            params['Buscar'] = item
-                        elif fullUrl['src'] == WebSite.AXESOR.value:
+                            params['Buscar'] = item'''
+                        if fullUrl['src'] == WebSite.AXESOR.value:
                             params = fullUrl['params']
                             params['q'] = item
-                        elif fullUrl['src'] == WebSite.INFOEMPRESA.value:
+                        '''elif fullUrl['src'] == WebSite.INFOEMPRESA.value:
                             params = fullUrl['params']
                             params['q'] = item
                     #if fullUrl['src'] == WebSite.GOOGLE.value:
@@ -849,7 +851,7 @@ class WebScrappingCompany:
                             params = fullUrl['params']
                             params['q'] = item
                             IsGOOGLE = True
-                            NoEntrar = False
+                            NoEntrar = False'''
                     else:
                         params = fullUrl['params']
                         params['pathSearch'] = str(item).replace(u' ',u'-') + '/'
@@ -867,7 +869,8 @@ class WebScrappingCompany:
                                 print(url+params['pathSearch'])
                                 #page = requests.get(url+params['pathSearch'], proxies=proxies, timeout=5)
                                 page = requests.get(url+params['pathSearch'], timeout=5)
-                            page.encoding = 'ISO-8859-1'
+                            #page.encoding = 'ISO-8859-1'
+                            page.encoding = 'UTF-8-SIG'
                             if page.status_code == 200 :
                                 txtHtml = html.fromstring(page.content)
                                 #print(txtHtml.xpath('//div[@id="generic-msg-status"]/text()'))
@@ -1017,7 +1020,8 @@ class WebScrappingCompany:
         #proxy = next(proxy_pool)
         #pageDetail = requests.get(pageCompany,proxies=proxies=self.proxies)
         pageDetail = requests.get(pageCompany)
-        pageDetail.encoding = 'ISO-8859-1'
+        #pageDetail.encoding = 'ISO-8859-1'
+        pageDetail.encoding = 'UTF-8-SIG'
         if pageDetail.status_code == 200 :
             txtHtml = html.fromstring(pageDetail.text)
             fields = self.getOutputsContainer(fullUrl['src'],txtHtml)
@@ -1056,6 +1060,11 @@ class WebScrappingCompany:
                         else:
                             first_letter = "B"
                         #if str(datos[i])[0] == first_letter:
+                        #print(item)
+                        #print('#1076', datos[0])
+                        #print('#1077', self.cleanStringData(datos[i].upper(),StringType.AlfaNumerico))
+                        #print('#1078', str(datos[i]) != '' and str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0] == first_letter)
+                        #print('#1079 - first_letter:', first_letter, '- primr char',  str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0])
                         if str(datos[i]) != '' and str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0] == first_letter:
                             self.FoundData == True
                             company[headersCsv[3]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumerico).upper() if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(company[headersCsv[3]]['valor'],StringType.AlfaNumerico).upper()
@@ -1072,16 +1081,12 @@ class WebScrappingCompany:
                         company[headersCsv[5]]['fuente'] = pageCompany if company[headersCsv[5]]['valor'] != '' else ''
                     if self.Labels['Industry'][WebSite.getWebsiteName(fullUrl['src'])] in e and (company[headersCsv[6]]['valor'] == '' or company[headersCsv[6]]['fuente'] == ''):
                         self.FoundData == True
-                        if WebSite.getWebsiteName(fullUrl['src']) == WebSite.GUIAEMPRESAS.name:
+                        '''if WebSite.getWebsiteName(fullUrl['src']) == WebSite.GUIAEMPRESAS.name:
                             company[headersCsv[6]]['valor'] = self.cleanStringData(str(datos[i])[7:len(datos[i])] if len(datos[i]) > 0 else datos[0], StringType.AlfaNumericoExt).upper() if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
                             company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
-                        elif WebSite.getWebsiteName(fullUrl['src']) == WebSite.GUIAEMPRESAS.name:
-                            strInd = self.cleanStringData(datos[i],StringType.AlfaNumericoExt).upper()
-                            company[headersCsv[6]]['valor'] = strInd[4:len(strInd)]  if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
-                            company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
-                        else:
-                            company[headersCsv[6]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumericoExt).upper() if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
-                            company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
+                        else:'''
+                        company[headersCsv[6]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumericoExt).upper() if company[headersCsv[6]]['valor'] == '' else self.cleanStringData(company[headersCsv[6]]['valor'],StringType.AlfaNumericoExt).upper()
+                        company[headersCsv[6]]['fuente'] = pageCompany if company[headersCsv[6]]['valor'] != '' else ''
                     if self.Labels['Contacts'][WebSite.getWebsiteName(fullUrl['src'])] in e and (company[headersCsv[7]]['valor'] == '' or company[headersCsv[7]]['fuente'] == ''):
                         self.FoundData == True
                         company[headersCsv[7]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumerico).upper() if company[headersCsv[7]]['valor'] == '' else self.cleanStringData(company[headersCsv[7]]['valor'],StringType.AlfaNumerico).upper()
@@ -1107,16 +1112,16 @@ class WebScrappingCompany:
         return company
 
     def cleanUrl(self, url, srcWeb):
-        if srcWeb == WebSite.INFOCIF.value:
-            url = 'http://' + str(url).strip('http://')
-        elif srcWeb == WebSite.AXESOR.value:
+        '''if srcWeb == WebSite.INFOCIF.value:
+            url = 'http://' + str(url).strip('http://')'''
+        if srcWeb == WebSite.AXESOR.value:
             url = 'http://' + str(url).strip('//')
-        elif srcWeb == WebSite.GUIAEMPRESAS.value:
+        '''elif srcWeb == WebSite.GUIAEMPRESAS.value:
             url = self.URLGUIAEMPRESAS + url
         elif srcWeb == WebSite.INFOEMPRESA.value:
             url = self.URLINFOEMPRESAS + str(url).replace('/es-es/es/','')
         elif srcWeb == WebSite.EMPRESITE.value:
-            url = url
+            url = url'''
         
         return url
 
@@ -1143,12 +1148,7 @@ class WebScrappingCompany:
             print(i)
 
 class WebSite(Enum):
-    GUIAEMPRESAS = 1
-    INFOCIF = 2
-    INFOEMPRESA = 3
     AXESOR = 4
-    EMPRESITE = 5
-    GOOGLE = 6
     '''INFOCIF = 1
     AXESOR = 2
     GUIAEMPRESAS = 3
