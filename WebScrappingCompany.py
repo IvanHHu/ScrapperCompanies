@@ -22,7 +22,7 @@ class WebScrappingCompany:
             'Brand':{'INFOCIF':'Marca','GUIAEMPRESAS':'Marca','AXESOR':'Marca','INFOEMPRESA':'Marca','EMPRESITE':'Marca','GOOGLE':'Marca'},
             'Website':{'INFOCIF':'Web','GUIAEMPRESAS':'Web','AXESOR':'Sitio Web','INFOEMPRESA':'Web','EMPRESITE':'Web','GOOGLE':'Web'},
             'NIF':{'INFOCIF':'CIF','GUIAEMPRESAS':'NIF','AXESOR':'CIF','INFOEMPRESA':'NIF/CIF','EMPRESITE':'CIF','Google':'NIF'},
-            'Phone_Number':{'INFOCIF':'Teléfono','GUIAEMPRESAS':'Teléfono','AXESOR':'Teléfono','INFOEMPRESA':'Telefono','EMPRESITE':'Teléfono','GOOGLE':'Teléfono'},              
+            'Phone_Number':{'INFOCIF':'Teléfono','GUIAEMPRESAS':'Teléfono','AXESOR':'Teléfono','INFOEMPRESA':'Teléfono','EMPRESITE':'Teléfono','GOOGLE':'Teléfono'},              
             'Email':{'INFOCIF':'Email','GUIAEMPRESAS':'Email','AXESOR':'Email','INFOEMPRESA':'Email','EMPRESITE':'Email','GOOGLE':'Email'},
             'Industry':{'INFOCIF':'Sector','GUIAEMPRESAS':'CNAE','AXESOR':'CNAE','INFOEMPRESA':'Sector','EMPRESITE':'Actividad CNAE','Google':'Sector'},
             'Contacts':{'INFOCIF':'Contacto','GUIAEMPRESAS':'Contactos','AXESOR':'Contactos','INFOEMPRESA':'Contactos','EMPRESITE':'Contactos','GOOGLE':'Contactos'},              
@@ -48,7 +48,7 @@ class WebScrappingCompany:
         self.URLGUIAEMPRESASSRCH = "/busqueda_empresas/"
         self.URLINFOEMPRESASSRCH="buscar"
         self.URLEMPRESITESRCH="Actividad/"
-        self.URLGOOGLESRCH="search"
+        self.URLGOOGLESRCH="search?q="
         self.SRCHNOTFOUND="Empresa no encontrada"
         self.SRCHNOTFOUND2="No se han encontrado resultados"
         self.FoundData = False
@@ -135,7 +135,7 @@ class WebScrappingCompany:
             fullUrl['src'] = v
             fullUrl['params'] = {'pathSearch': '' }
         elif v == WebSite.GOOGLE.value:
-            url = self.URLGOOGLE + self.URLEMPRESITESRCH
+            url = self.URLGOOGLE + self.URLGOOGLESRCH
             fullUrl['url'] = url
             fullUrl['type'] = 'd'
             fullUrl['src'] = v
@@ -198,9 +198,11 @@ class WebScrappingCompany:
             print("Aqui va el link")
             print ("Este el item " + item)
             params = {'q': str(field) + ' ' + item}
-            page = requests.get(url, params=params, proxies=self.proxies, stream=True)
-            page.encoding = 'ISO-8859-1'
+            page = requests.get(url, params=params, stream=True)
+            #page.encoding = 'ISO-8859-1'
+            page.encoding = 'UTF-8-SIG'
             url_2 = page.url
+            print(page.status_code)
             if page.status_code == 200:
                 print(url_2)
                 soup = BeautifulSoup(page.content, "lxml")
@@ -223,7 +225,8 @@ class WebScrappingCompany:
             print("Aqui va la info")
             params = {'q': str(field) + ' "' + item + '"'}
             page = requests.get(url, params=params, stream=True)
-            page.encoding = 'ISO-8859-1'
+            #page.encoding = 'ISO-8859-1'
+            page.encoding = 'UTF-8-SIG'
             url_2 = page.url
             if page.status_code == 200:
                 print(url_2)
@@ -858,7 +861,7 @@ class WebScrappingCompany:
                         #proxies = {'https': 'https://user-59460:user-59460@77.74.194.138:1212'}
                         #proxy_pool = cycle(proxies)
                         #proxy = next(proxy_pool)
-                        if IsGOOGLE == False and NoEntrar == True:
+                        if IsGOOGLE == True and NoEntrar == True:
                             page = None
                             if fullUrl['type'] == 'd':
                                 #page = requests.get(url, params=params, proxies=self.proxies, timeout=5)
@@ -867,7 +870,8 @@ class WebScrappingCompany:
                                 print(url+params['pathSearch'])
                                 #page = requests.get(url+params['pathSearch'], proxies=proxies, timeout=5)
                                 page = requests.get(url+params['pathSearch'], timeout=5)
-                            page.encoding = 'ISO-8859-1'
+                            #page.encoding = 'ISO-8859-1'
+                            page.encoding = 'UTF-8-SIG'
                             if page.status_code == 200 :
                                 txtHtml = html.fromstring(page.content)
                                 #print(txtHtml.xpath('//div[@id="generic-msg-status"]/text()'))
@@ -942,13 +946,13 @@ class WebScrappingCompany:
                             if company[headersCsv[4]]['valor'] == '':
                                 if str(outputs)[0:3] != 902 or str(outputs)[0:3] != 901:
                                     self.FoundData == True
-                                    outputs, url_2 = self.getOutputDataFromHtml_Google("Telefono","Info", url, item)
+                                    outputs, url_2 = self.getOutputDataFromHtml_Google("Telefono:","Info", url, item)
                                     #company[headersCsv[4]]['valor'] = self.cleanStringData(outputs,StringType.Telefono) if company[headersCsv[4]]['valor'] == '' else self.cleanStringData(outputs,StringType.Telefono)
                                     company[headersCsv[4]]['valor'] = outputs if company[headersCsv[4]]['valor'] == '' else outputs
                                     company[headersCsv[4]]['fuente'] = url_2 if company[headersCsv[4]]['valor'] != '' else ''
                             if company[headersCsv[5]]['valor'] == '':
                                 self.FoundData == True
-                                outputs, url_2 = self.getOutputDataFromHtml_Google("Email","Info", url, item)
+                                outputs, url_2 = self.getOutputDataFromHtml_Google("Email:","Info", url, item)
                                 #company[headersCsv[5]]['valor'] = self.cleanStringData(outputs,StringType.Email) if company[headersCsv[5]]['valor'] == '' else self.cleanStringData(outputs,StringType.Email)
                                 company[headersCsv[5]]['valor'] = outputs if company[headersCsv[5]]['valor'] == '' else outputs
                                 company[headersCsv[5]]['fuente'] = url_2 if company[headersCsv[4]]['valor'] != '' else ''
@@ -1017,7 +1021,8 @@ class WebScrappingCompany:
         #proxy = next(proxy_pool)
         #pageDetail = requests.get(pageCompany,proxies=proxies=self.proxies)
         pageDetail = requests.get(pageCompany)
-        pageDetail.encoding = 'ISO-8859-1'
+        #pageDetail.encoding = 'ISO-8859-1'
+        pageDetail.encoding = 'UTF-8-SIG'
         if pageDetail.status_code == 200 :
             txtHtml = html.fromstring(pageDetail.text)
             fields = self.getOutputsContainer(fullUrl['src'],txtHtml)

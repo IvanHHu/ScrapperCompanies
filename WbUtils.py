@@ -39,7 +39,8 @@ class WbUtils:
         print(self.pathFile)
         if useDictReader == False:
             #f = open(self.pathFile,'w', newline='', encoding='cp1252')
-            f = open(self.pathFile,'w', newline='', encoding='ISO-8859-1',errors='ignore')
+            #f = open(self.pathFile,'w', newline='', encoding='ISO-8859-1',errors='ignore')
+            f = open(self.pathFile,'w', newline='', encoding='UTF-8-SIG',errors='ignore')
             with f :
                 writer = csv.writer(f)
                 writer.writerow(headers)
@@ -47,7 +48,8 @@ class WbUtils:
             print("Writing %s without DictReader complete" % self.pathFile)
         else:
             #f = open(self.pathFile, encoding='cp1252')
-            f = open(self.pathFile, encoding='ISO-8859-1',errors='ignore')
+            #f = open(self.pathFile, encoding='ISO-8859-1',errors='ignore')
+            f = open(self.pathFile, encoding='UTF-8-SIG',errors='ignore')
             with f:    
                 myFields = headers
                 writer = csv.DictWriter(f, fieldnames=myFields)    
