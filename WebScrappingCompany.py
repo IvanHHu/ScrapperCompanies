@@ -223,7 +223,7 @@ class WebScrappingCompany:
                                 break
         else:
             print("Aqui va la info")
-            params = {'q': str(field) + ' "' + item + '"'}
+            params = {'q': str(field) + ' "' + item + '"'} if str(field) != 'Email:' and str(field) != 'Telefono:'  else {'q': str(field) + ' ' + item}
             page = requests.get(url, params=params, stream=True)
             #page.encoding = 'ISO-8859-1'
             page.encoding = 'UTF-8-SIG'
@@ -279,6 +279,7 @@ class WebScrappingCompany:
                         if dato[-1:] == '-':
                             dato = dato[0:-1]
                 if field_l == "email:":
+                    #print('#282 ', html_text)
                     listStr = re.findall(r"\w+@\w+\.\w+",html_text)                    
                     #listStr = re.findall(r'[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,6}',html_text)
                     if len(listStr) > 0:
@@ -289,6 +290,8 @@ class WebScrappingCompany:
                                     dato += strI + '-'
                                 else:
                                     dato += strI
+                        if dato[-1:] == '-':
+                            dato = dato[0:-1]
                 if field_l == "telefono:":
                     listStr = re.findall(r'\s[{}+()0-9\s]{8,25}',html_text)
                     #dato = html_text
@@ -302,6 +305,8 @@ class WebScrappingCompany:
                                 else:
                                     dato += strI
                             cnt +=1
+                        if dato[-1:] == '-':
+                            dato = dato[0:-1]
                 if field_l == "denominacion:":
                     dato = html_text
                 if field_l == "cnae 2009:":
@@ -861,7 +866,7 @@ class WebScrappingCompany:
                         #proxies = {'https': 'https://user-59460:user-59460@77.74.194.138:1212'}
                         #proxy_pool = cycle(proxies)
                         #proxy = next(proxy_pool)
-                        if IsGOOGLE == True and NoEntrar == True:
+                        if IsGOOGLE == False and NoEntrar == True:
                             page = None
                             if fullUrl['type'] == 'd':
                                 #page = requests.get(url, params=params, proxies=self.proxies, timeout=5)
