@@ -1060,16 +1060,17 @@ class WebScrappingCompany:
                         company[headersCsv[2]]['fuente'] = pageCompany if company[headersCsv[2]]['valor'] != '' else ''
                     if self.Labels['NIF'][WebSite.getWebsiteName(fullUrl['src'])] in e and (company[headersCsv[3]]['valor'] == '' or company[headersCsv[3]]['fuente'] == ''):
                         #if datos[i] == "-" or  "   " in datos[i]:
-                        first_letter = ''
-                        if " Anonima" in item:
-                            first_letter = "A"
-                        else:
-                            first_letter = "B"
-                        #if str(datos[i])[0] == first_letter:
-                        if str(datos[i]) != '' and str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0] == first_letter:
-                            self.FoundData == True
-                            company[headersCsv[3]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumerico).upper() if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(company[headersCsv[3]]['valor'],StringType.AlfaNumerico).upper()
-                            company[headersCsv[3]]['fuente'] = pageCompany if company[headersCsv[3]]['valor'] != '' else ''
+                        if len(datos[i]) == 9:
+                            first_letter = ''
+                            if " Anonima" in item:
+                                first_letter = "A"
+                            else:
+                                first_letter = "B"
+                            #if str(datos[i])[0] == first_letter:
+                            if str(datos[i]) != '' and str(self.cleanStringData(datos[i],StringType.AlfaNumerico))[0] == first_letter:
+                                self.FoundData == True
+                                company[headersCsv[3]]['valor'] = self.cleanStringData(datos[i],StringType.AlfaNumerico).upper() if company[headersCsv[3]]['valor'] == '' else self.cleanStringData(company[headersCsv[3]]['valor'],StringType.AlfaNumerico).upper()
+                                company[headersCsv[3]]['fuente'] = pageCompany if company[headersCsv[3]]['valor'] != '' else ''
                     if self.Labels['Phone_Number'][WebSite.getWebsiteName(fullUrl['src'])] in e and (company[headersCsv[4]]['valor'] == '' or company[headersCsv[4]]['fuente'] == ''):
                         if str(datos[i])[0:3] != 902 or str(datos[i])[0:3] != 901:
                             self.FoundData == True
